@@ -6,8 +6,6 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] LayerMask movementMask;
 
-    Camera camera;
-
     PlayerMotor motor;
 
     public Interactable focus;
@@ -21,7 +19,6 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        camera = Camera.main;
         motor = GetComponent<PlayerMotor>();
     }
 

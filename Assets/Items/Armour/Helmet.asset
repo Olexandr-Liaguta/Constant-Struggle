@@ -7,9 +7,9 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5aa7a9a247d3f1d45958d9318614bd17, type: 3}
+  m_Script: {fileID: 11500000, guid: 4cf630127b51a6d4ba2efed5ed8938f1, type: 3}
   m_Name: Helmet
   m_EditorClassIdentifier: 
   name: Helmet
@@ -17,5 +17,5 @@ MonoBehaviour:
   isDefaultItem: 0
   equipmentSlot: 0
   mesh: {fileID: 2802167723767236785, guid: 70cdfce4221a14b4fa95355a56d82d76, type: 3}
-  armorModifier: 2
-  damageModifier: 1
+  coveredMeshRegions: 
+  armor: 2

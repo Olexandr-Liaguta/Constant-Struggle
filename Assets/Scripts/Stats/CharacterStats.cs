@@ -17,6 +17,7 @@ public class CharacterStats : MonoBehaviour
 
     public Stat minDamage;
     public Stat maxDamage;
+    public Stat attackSpeed;
 
     public Stat armor;
 

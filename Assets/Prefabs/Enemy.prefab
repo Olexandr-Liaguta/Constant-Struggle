@@ -48,7 +48,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 5565718157618583167}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.2
+  m_Radius: 0.4
   m_Speed: 2
   m_Acceleration: 20
   avoidancePriority: 50
@@ -71,7 +71,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.3
+  m_Radius: 0.4
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0507424ace057e43b4f362566c79934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 40
+  initHealth: 40
   minDamage:
     baseValue: 1
   maxDamage:

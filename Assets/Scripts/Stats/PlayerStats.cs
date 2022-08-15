@@ -12,27 +12,82 @@ public class PlayerStats : CharacterStats
     [SerializeField]
     private TextMeshProUGUI healthText;
 
+    [SerializeField]
+    InventoryStatsManager inventoryStatsManager;
+
     void Start()
     {
         EquipmentManager.instance.onEquipmentChanged += OnEquipmentChange;
+
+        inventoryStatsManager.UpdateStats(this);
     }
 
     void OnEquipmentChange(Equipment newItem, Equipment oldItem)
     {
         if (newItem != null)
         {
-            armor.AddModifier(newItem.armorModifier);
-            minDamage.AddModifier(newItem.minDamageModifier);
-            maxDamage.AddModifier(newItem.maxDamageModifier);
+            AddModifiers(newItem);
         }
-
-        Debug.Log("Old item min: " + oldItem.minDamageModifier);
 
         if (oldItem != null)
         {
-            armor.RemoveModifier(oldItem.armorModifier);
-            minDamage.RemoveModifier(oldItem.minDamageModifier);
-            maxDamage.RemoveModifier(oldItem.maxDamageModifier);
+            RemoveModifiers(oldItem);
+        }
+
+        inventoryStatsManager.UpdateStats(this);
+    }
+
+    private void AddModifiers(Equipment equipment)
+    {
+        if (equipment.modifiersMap == null) return;
+
+        foreach (var modifier in equipment.modifiersMap)
+        {
+            switch(modifier.Key)
+            {
+                case EquipmentModifier.Armor:
+                    armor.AddModifier(modifier.Value);
+                    break;
+
+                case EquipmentModifier.MinDamage:
+                    minDamage.AddModifier(modifier.Value);
+                    break;
+                
+                case EquipmentModifier.MaxDamage:
+                    maxDamage.AddModifier(modifier.Value);
+                    break;
+                
+                case EquipmentModifier.AttackSpeed:
+                    attackSpeed.AddModifier(modifier.Value);
+                    break;
+            }
+        }
+    }
+    
+    private void RemoveModifiers(Equipment equipment)
+    {
+        if (equipment.modifiersMap == null) return;
+
+        foreach(var modifier in equipment.modifiersMap)
+        {
+            switch(modifier.Key)
+            {
+                case EquipmentModifier.Armor:
+                    armor.RemoveModifier(modifier.Value);
+                    break;
+
+                case EquipmentModifier.MinDamage:
+                    minDamage.RemoveModifier(modifier.Value);
+                    break;
+                
+                case EquipmentModifier.MaxDamage:
+                    maxDamage.RemoveModifier(modifier.Value);
+                    break;
+                
+                case EquipmentModifier.AttackSpeed:
+                    attackSpeed.RemoveModifier(modifier.Value);
+                    break;
+            }
         }
     }
 

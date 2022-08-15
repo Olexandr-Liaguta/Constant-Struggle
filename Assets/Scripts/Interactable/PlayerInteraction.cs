@@ -26,7 +26,11 @@ public class PlayerInteraction : MonoBehaviour
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactRadius, interactMask);
 
-        if (hitColliders.Length == 0) return;
+        if (hitColliders.Length == 0)
+        {
+            RemoveFocus();
+            return;
+        };
 
         Collider firstCollider = hitColliders[0];
 
@@ -41,10 +45,7 @@ public class PlayerInteraction : MonoBehaviour
 
         if (itemId != focusedItemId)
         {
-            if (instantiatedSprite != null)
-            {
-                Destroy(instantiatedSprite);
-            }
+            RemoveFocus();
 
             focusedItemId = itemId;
 
@@ -55,6 +56,14 @@ public class PlayerInteraction : MonoBehaviour
                 collider.transform.position.y + 0.3f,
                 collider.transform.position.z
             );
+        }
+    }
+
+    private void RemoveFocus()
+    {
+        if (instantiatedSprite != null)
+        {
+            Destroy(instantiatedSprite);
         }
     }
 

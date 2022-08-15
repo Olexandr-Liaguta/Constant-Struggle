@@ -1,12 +1,23 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System;
 
 public class InventorySlot : MonoBehaviour
 {
     public Image icon;
-    public Button removeButton;
+    public Button itemButton;
+
+    public Guid id = Guid.NewGuid();
+
+    InventoryUI inventoryUI;
 
     Item item;
+
+    private void Start()
+    {
+        inventoryUI = GetComponentInParent<InventoryUI>();
+    }
 
     public void AddItem(Item newItem)
     {
@@ -15,7 +26,7 @@ public class InventorySlot : MonoBehaviour
         icon.sprite = item.icon;
         icon.enabled = true;
 
-        removeButton.interactable = true;
+        itemButton.interactable = true;
     }
 
     public void ClearSlot()
@@ -25,7 +36,7 @@ public class InventorySlot : MonoBehaviour
         icon.sprite = null;
         icon.enabled = false;
 
-        removeButton.interactable = false;
+        itemButton.interactable = false;
     }
 
     public void OnRemoveButton()
@@ -33,11 +44,26 @@ public class InventorySlot : MonoBehaviour
         Inventory.instance.Remove(item);
     }
 
+    public void SetSelectedState(bool value)
+    {
+        if (value)
+        {
+            itemButton.Select();
+        }
+    }
+
+    public void SelectItem()
+    {
+        inventoryUI.SelectInventoryItem(id);
+    }
+
     public void UseItem()
     {
-        if(item != null)
+        if (item != null)
         {
             item.Use();
         }
     }
+
+
 }

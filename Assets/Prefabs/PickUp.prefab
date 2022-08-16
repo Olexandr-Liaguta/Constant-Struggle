@@ -107,6 +107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4545409464134978488}
   - component: {fileID: 4545409464134978495}
+  - component: {fileID: 3583268695800492418}
   m_Layer: 8
   m_Name: PickUp
   m_TagString: Untagged
@@ -144,7 +145,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 1
   interctionTransform: {fileID: 4545409464134978488}
-  items:
-  - {fileID: 11400000, guid: 6a89a341cef9ab24097850c58bcec941, type: 2}
-  - {fileID: 11400000, guid: 9bcf8e5a3de2acb4fb80a9fd599e6580, type: 2}
-  - {fileID: 11400000, guid: 9b00de1881d68e34bae275aa193771a9, type: 2}
+  items: []
+--- !u!135 &3583268695800492418
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4545409464134978489}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.2
+  m_Center: {x: 0, y: 0, z: 0}

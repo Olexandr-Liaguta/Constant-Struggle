@@ -135,6 +135,8 @@ MonoBehaviour:
     baseValue: 1
   maxDamage:
     baseValue: 3
+  attackSpeed:
+    baseValue: 0
   armor:
     baseValue: 1
   strength:
@@ -145,6 +147,7 @@ MonoBehaviour:
     baseValue: 1
   accuracy:
     baseValue: 1
+  pickUpGO: {fileID: 4545409464134978489, guid: f4fb817b56f61d640af171ffd746c74c, type: 3}
 --- !u!114 &5565718157618583159
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -21,7 +21,7 @@ public class NotifyManager : MonoBehaviour
     {
         var attackNotifyInst = Instantiate(attackNotifyPrefab);
 
-        var attackNotify = attackNotifyInst.GetComponent<AttackNotify>();
+        var attackNotify = attackNotifyInst.GetComponent<AttackNotifyUI>();
 
         if (isMiss)
         {

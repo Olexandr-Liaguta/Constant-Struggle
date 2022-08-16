@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class InventoryStatsManager : MonoBehaviour
 {
+    [SerializeField]
     InventoryArmorStat armorStat;
+
+    [SerializeField]
     InventoryDamageStat damageStat;
-    InventoryPrimalStat[] primalStats; 
 
+    [SerializeField]
+    InventoryPrimalStat accuracyStat, agilityStat, spiritStat, strengthStat; 
 
-    void Start()
-    {
-        armorStat = GetComponentInChildren<InventoryArmorStat>();   
-        damageStat = GetComponentInChildren<InventoryDamageStat>();   
-        primalStats = GetComponentsInChildren<InventoryPrimalStat>();   
-    }
 
     public void UpdateStats(PlayerStats playerStats)
     {
@@ -23,24 +21,10 @@ public class InventoryStatsManager : MonoBehaviour
         var damages = playerStats.GetCalculatedDamages();
         damageStat.SetStats(damages.minDamage, damages.maxDamage);
 
-        foreach(var primalStat in primalStats)
-        {
-            switch(primalStat.statType)
-            {
-                case PrimalStat.Accuracy:
-                    primalStat.SetStats(playerStats.accuracy.GetBaseValue(), playerStats.accuracy.GetValue());
-                    break;
-                case PrimalStat.Agility:
-                    primalStat.SetStats(playerStats.agility.GetBaseValue(), playerStats.agility.GetValue());
-                    break;
-                case PrimalStat.Spirit:
-                    primalStat.SetStats(playerStats.spirit.GetBaseValue(), playerStats.spirit.GetValue());
-                    break;
-                case PrimalStat.Strength:
-                    primalStat.SetStats(playerStats.strength.GetBaseValue(), playerStats.strength.GetValue());
-                    break;
-            }
-        }
+        accuracyStat.SetStats(playerStats.accuracy.GetBaseValue(), playerStats.accuracy.GetValue());
+        agilityStat.SetStats(playerStats.agility.GetBaseValue(), playerStats.agility.GetValue());
+        spiritStat.SetStats(playerStats.spirit.GetBaseValue(), playerStats.spirit.GetValue());
+        strengthStat.SetStats(playerStats.strength.GetBaseValue(), playerStats.strength.GetValue());
     }
 
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92ba077ad462b1b4b927b980828c721f, type: 3}
   m_Name: Platebody
   m_EditorClassIdentifier: 
-  name: New item
+  name: Platebody
   icon: {fileID: 21300000, guid: 4756bf6c052cad44f81e58305504aa29, type: 3}
   isDefaultItem: 0
   equipmentSlot: 1

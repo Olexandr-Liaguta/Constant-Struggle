@@ -1,18 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System;
 using UnityEngine;
-using Cinemachine;
 
 public class InventoryUI : MonoBehaviour
 {
     public Transform itemsParent;
     public Transform equipmentsParent;
     public GameObject inventoryUI_GO;
-
-    [SerializeField]
-    private CinemachineFreeLook camera;
 
     Inventory inventory;
     InventorySlot[] slots;
@@ -49,19 +43,15 @@ public class InventoryUI : MonoBehaviour
     {
         if (Input.GetButtonDown("Inventory"))
         {
-            Debug.Log("Inventory " + inventoryUI_GO.activeSelf);
-
             if (inventoryUI_GO.activeSelf)
             {
                 inventoryUI_GO.SetActive(false);
-                camera.enabled = true;
-                Cursor.visible = false;
+                GameManager.instance.UnstackCameraAndHideCursor();
             }
             else
             {
                 inventoryUI_GO.SetActive(true);
-                camera.enabled = false;
-                Cursor.visible = true;
+                GameManager.instance.StackCameraAndShowCursor();
             }
 
         }

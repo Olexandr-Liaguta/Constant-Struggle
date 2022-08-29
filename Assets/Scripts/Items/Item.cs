@@ -8,14 +8,13 @@ public class Item : ScriptableObject
     public Sprite icon = null;
     public bool isDefaultItem = false;
 
+    public int maxQuantity = 1;
+
+    public float weight = 0;
+
     public virtual void Use()
     {
         // Debug.Log("Use item " + name);
-    }
-
-    public void RemoveFromInventory()
-    {
-        Inventory.instance.Remove(this);
     }
 
     private void OnEnable()

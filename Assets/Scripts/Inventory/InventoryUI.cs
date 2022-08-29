@@ -1,37 +1,32 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using TMPro;
 
 public class InventoryUI : MonoBehaviour
 {
     public Transform itemsParent;
-    public Transform equipmentsParent;
     public GameObject inventoryUI_GO;
 
     Inventory inventory;
-    InventorySlot[] slots;
+    [SerializeField] GameObject inventorySlotUIPrefab;
+    readonly Dictionary<Guid, GameObject> instantiatedItemSlots = new();
+    InventorySlotUI[] itemSlots;
     Guid selectedInventoryId;
 
-    EquipmentManager equipmentManager;
-    Dictionary<EquipmentSlot, InventoryEquipmentSlot> equipmentSlots = new();
+    [SerializeField] Transform resourcesParent;
+    InventoryResourceUI[] resourceSlots;
 
+    InventoryWeightUI inventoryWeightUI;
 
     void Start()
     {
         inventory = Inventory.instance;
         inventory.onItemsChangedCallback += UpdateUI;
 
-        equipmentManager = EquipmentManager.instance;
-        equipmentManager.onEquipmentChanged += UpdateEquipmentUI;
+        inventoryWeightUI = GetComponent<InventoryWeightUI>();
 
-        slots = itemsParent.GetComponentsInChildren<InventorySlot>();
-
-        var equipmentSlotsInChildrens = equipmentsParent.GetComponentsInChildren<InventoryEquipmentSlot>();
-
-        foreach (var equipmentSlot in equipmentSlotsInChildrens)
-        {
-            equipmentSlots.Add(equipmentSlot.equipmentSlot, equipmentSlot);
-        }
+        resourceSlots = resourcesParent.GetComponentsInChildren<InventoryResourceUI>();
 
         UpdateUI();
 
@@ -65,45 +60,63 @@ public class InventoryUI : MonoBehaviour
 
     void UpdateUI()
     {
-        Guid id;
+        UpdateItemsUI();
 
-        for (int i = 0; i < slots.Length; i++)
-        {
-            id = slots[i].id;
-
-            slots[i].SetSelectedState(id.Equals(selectedInventoryId));
-
-            if (i < inventory.items.Count)
-            {
-                slots[i].AddItem(inventory.items[i]);
-            }
-            else
-            {
-                slots[i].ClearSlot();
-            }
-        }
+        UpdateResourcesUI();
     }
 
-    void UpdateEquipmentUI(Equipment newItem, Equipment oldItem)
+    void UpdateItemsUI()
     {
-        if (newItem == null) return;
+        var itemGOs = new Dictionary<Guid, GameObject>(instantiatedItemSlots);
 
-        equipmentSlots.TryGetValue(newItem.equipmentSlot, out InventoryEquipmentSlot equipment);
-
-        if (equipment == null || equipment.slot == null)
+        foreach (InventoryItem inventorySlot in inventory.items)
         {
-            return;
+            itemGOs.TryGetValue(inventorySlot.id, out GameObject GO);
+
+            if(GO == null)
+            {
+                GameObject instantiatedInventoryItem = Instantiate(inventorySlotUIPrefab);
+
+                instantiatedInventoryItem.transform.SetParent(itemsParent.transform);
+
+                var inventorySlotUI = instantiatedInventoryItem.GetComponent<InventorySlotUI>();
+
+                inventorySlotUI.AddItem(inventorySlot);
+
+                instantiatedItemSlots.Add(inventorySlot.id, instantiatedInventoryItem);
+            } else
+            {
+                itemGOs.Remove(inventorySlot.id);
+            }
         }
 
-        if (newItem.isDefaultItem)
+        foreach (var keyValuePair in itemGOs)
         {
-            equipment.slot.ClearSlot();
+            Destroy(keyValuePair.Value);
+            instantiatedItemSlots.Remove(keyValuePair.Key);
         }
-        else
+
+        itemSlots = itemsParent.GetComponentsInChildren<InventorySlotUI>();
+
+        bool isIdEqual;
+
+        for (int i = 0; i < itemSlots.Length; i++)
         {
-            equipment.slot.AddItem(newItem);
+            isIdEqual = itemSlots[i].id.Equals(selectedInventoryId);
+
+            itemSlots[i].SetSelectedState(isIdEqual);
         }
+
+        inventoryWeightUI.UpdateWeightValues();
     }
 
+    void UpdateResourcesUI()
+    {
+        for (int i = 0; i < resourceSlots.Length; i++)
+        {
+            int resourceValue = inventory.resources[resourceSlots[i].type];
+            resourceSlots[i].SetResourceValue(resourceValue);
+        }
+    }
 
 }

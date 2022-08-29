@@ -21,22 +21,33 @@ public class Inventory : MonoBehaviour
 
     #endregion
 
-    public List<Item> items = new();
+    public List<InventoryItem> items = new();
 
-    public int space = 20;
+    public Dictionary<ResourceType, int> resources = new()
+    {
+        { ResourceType.Crystal, 0 },
+        { ResourceType.Food, 0 },
+        { ResourceType.Steel, 0 },
+        { ResourceType.Wood, 0 }
+    };
 
     public delegate void OnItemsChanged();
     public OnItemsChanged onItemsChangedCallback;
 
-    public bool Add(Item item)
+    public bool Add(InventoryItem inventoryItem)
     {
-        if (!item.isDefaultItem)
+        if (inventoryItem.item is ResourceItem)
         {
-            if (items.Count >= space)
-            {
-                return false;
-            }
-            items.Add(item);
+            resources[(inventoryItem.item as ResourceItem).type] += inventoryItem.quantity;
+
+            if (onItemsChangedCallback != null) onItemsChangedCallback.Invoke();
+
+            return true;
+        }
+
+        if (!inventoryItem.item.isDefaultItem)
+        {
+            items.Add(inventoryItem);
 
             if (onItemsChangedCallback != null) onItemsChangedCallback.Invoke();
         }
@@ -44,11 +55,23 @@ public class Inventory : MonoBehaviour
         return true;
     }
 
-    public void Remove(Item item)
+    public void Remove(InventoryItem item)
     {
         items.Remove(item);
 
         if (onItemsChangedCallback != null) onItemsChangedCallback.Invoke();
+    }
+
+    public float GetCurrentWeight()
+    {
+        float sum = 0f;
+
+        foreach(InventoryItem inventoryItem in items)
+        {
+            sum += inventoryItem.item.weight;
+        }
+
+        return sum;
     }
 
 }

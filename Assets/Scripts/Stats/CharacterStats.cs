@@ -10,10 +10,11 @@ public class DamageStats
 
 public class CharacterStats : MonoBehaviour
 {
-    [SerializeField]
-    private int initHealth = 100;
-
+    [SerializeField] private int initHealth = 100;
     public int currentHealth { get; private set; }
+
+    [SerializeField] int initMana = 40;
+    public int currentMana { get; private set; }
 
     public Stat minDamage;
     public Stat maxDamage;
@@ -26,6 +27,8 @@ public class CharacterStats : MonoBehaviour
     public Stat spirit;
     public Stat accuracy;
 
+    public Stat maxHandleWeight;
+
 
     public void Awake()
     {
@@ -36,7 +39,7 @@ public class CharacterStats : MonoBehaviour
 
     public int GetMaxHealth()
     {
-        return initHealth + (strength.GetValue() * 50);
+        return initHealth + (strength.GetValue() * 25);
     }
 
     public DamageStats GetCalculatedDamages()
@@ -139,9 +142,9 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    public virtual void OnChangeHealth()
-    {
-    }
+    public virtual void OnChangeHealth() { }
+
+    public virtual void OnChangeMana() { }
 
     public virtual void Die()
     {

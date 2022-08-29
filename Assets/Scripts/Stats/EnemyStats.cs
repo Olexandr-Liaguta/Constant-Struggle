@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,18 +8,13 @@ public class EnemyStats : CharacterStats
     [SerializeField]
     GameObject pickUpGO;
 
+    public int score = 25;
+
     public override void Die()
     {
         base.Die();
 
-        GameObject createdPickUpGO = Instantiate(pickUpGO);
-
-        PickUpObject createdPickUpObject = createdPickUpGO.GetComponent<PickUpObject>();
-        createdPickUpObject.transform.position = transform.position;
-
-        var item = ItemManager.instance.GetRandomItem();
-
-        createdPickUpObject.items = new List<Item>() { item };
+        PickUpManager.instance.DropPickup(gameObject, score);
 
         Destroy(gameObject);
     }

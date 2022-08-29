@@ -23,6 +23,9 @@ public class PickUpManager : MonoBehaviour
     [SerializeField]
     PickUpUI pickUpUI;
 
+    [SerializeField]
+    GameObject pickUpGO;
+
     PickUpObject _pickUpObject;
 
 
@@ -33,9 +36,21 @@ public class PickUpManager : MonoBehaviour
         pickUpUI.ShowPickUpItems(_pickUpObject.items);
     }
 
-    public bool PickUpItem(Item item)
+    public bool PickUpItem(InventoryItem item)
     {
         return _pickUpObject.PickUpItem(item);
+    }
+
+    public void DropPickup(GameObject gameObject, int score)
+    {
+        GameObject createdPickUpGO = Instantiate(pickUpGO);
+
+        PickUpObject createdPickUpObject = createdPickUpGO.GetComponent<PickUpObject>();
+        createdPickUpObject.transform.position = gameObject.transform.position;
+
+        List<InventoryItem> items = ItemManager.instance.GetRandomItems(score);
+
+        createdPickUpObject.items = items;
     }
 
 }

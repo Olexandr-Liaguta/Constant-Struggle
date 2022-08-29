@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4149c1ab30440d04887b8e2249ea6e14, type: 3}
+  m_Name: FoodResource
+  m_EditorClassIdentifier: 
+  name: Food
+  icon: {fileID: 21300000, guid: 78af1012831989a4d8de1d2726a187c9, type: 3}
+  isDefaultItem: 0
+  quantity: 6
+  maxQuantity: 0
+  type: 2

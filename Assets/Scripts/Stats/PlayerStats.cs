@@ -13,7 +13,16 @@ public class PlayerStats : CharacterStats
     private TextMeshProUGUI healthText;
 
     [SerializeField]
-    InventoryStatsManager inventoryStatsManager;
+    InventoryStatsManagerUI inventoryStatsManager;
+
+    public Dictionary<ItemRarity, float> rarityChance = new()
+    {
+        {ItemRarity.Improved, 50},
+        {ItemRarity.Magical, 30},
+        {ItemRarity.Rare, 5},
+        {ItemRarity.Demonic, 1},
+        {ItemRarity.Set, 0.1f},
+    };
 
     void Start()
     {
@@ -22,7 +31,7 @@ public class PlayerStats : CharacterStats
         inventoryStatsManager.UpdateStats(this);
     }
 
-    void OnEquipmentChange(Equipment newItem, Equipment oldItem)
+    void OnEquipmentChange(EquipmentSlotExact slot, InventoryItem newItem, InventoryItem oldItem)
     {
         if (newItem != null)
         {
@@ -37,54 +46,58 @@ public class PlayerStats : CharacterStats
         inventoryStatsManager.UpdateStats(this);
     }
 
-    private void AddModifiers(Equipment equipment)
+    private void AddModifiers(InventoryItem inventoryItem)
     {
-        if (equipment.modifiersMap == null) return;
+        var modifiersMap = (inventoryItem.item as Equipment).modifiersMap;
 
-        foreach (var modifier in equipment.modifiersMap)
+        if (modifiersMap == null) return;
+
+        foreach (var modifier in modifiersMap)
         {
-            switch(modifier.Key)
+            switch (modifier.Key)
             {
-                case EquipmentModifier.Armor:
+                case Modifier.Armor:
                     armor.AddModifier(modifier.Value);
                     break;
 
-                case EquipmentModifier.MinDamage:
+                case Modifier.MinDamage:
                     minDamage.AddModifier(modifier.Value);
                     break;
-                
-                case EquipmentModifier.MaxDamage:
+
+                case Modifier.MaxDamage:
                     maxDamage.AddModifier(modifier.Value);
                     break;
-                
-                case EquipmentModifier.AttackSpeed:
+
+                case Modifier.AttackSpeed:
                     attackSpeed.AddModifier(modifier.Value);
                     break;
             }
         }
     }
-    
-    private void RemoveModifiers(Equipment equipment)
-    {
-        if (equipment.modifiersMap == null) return;
 
-        foreach(var modifier in equipment.modifiersMap)
+    private void RemoveModifiers(InventoryItem inventoryItem)
+    {
+        var modifiersMap = (inventoryItem.item as Equipment).modifiersMap;
+
+        if (modifiersMap == null) return;
+
+        foreach (var modifier in modifiersMap)
         {
-            switch(modifier.Key)
+            switch (modifier.Key)
             {
-                case EquipmentModifier.Armor:
+                case Modifier.Armor:
                     armor.RemoveModifier(modifier.Value);
                     break;
 
-                case EquipmentModifier.MinDamage:
+                case Modifier.MinDamage:
                     minDamage.RemoveModifier(modifier.Value);
                     break;
-                
-                case EquipmentModifier.MaxDamage:
+
+                case Modifier.MaxDamage:
                     maxDamage.RemoveModifier(modifier.Value);
                     break;
-                
-                case EquipmentModifier.AttackSpeed:
+
+                case Modifier.AttackSpeed:
                     attackSpeed.RemoveModifier(modifier.Value);
                     break;
             }
@@ -99,7 +112,7 @@ public class PlayerStats : CharacterStats
 
         healthImage.fillAmount = healthPercent;
 
-        healthText.text = GetMaxHealth() + " / " + currentHealth;
+        healthText.text = currentHealth + " / " + GetMaxHealth();
     }
 
     public override void Die()

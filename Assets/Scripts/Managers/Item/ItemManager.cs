@@ -118,7 +118,7 @@ public class ItemManager : MonoBehaviour
 
         while (remainScore > 0)
         {
-            if (remainScore < ItemScores.itemRarityScores[ItemRarity.Simple])
+            if (remainScore < ScoresHelper.itemRarityScores[ItemRarity.Simple])
             {
                 HandleRandomResourse(ref remainScore, ref randomItems);
             }
@@ -146,7 +146,7 @@ public class ItemManager : MonoBehaviour
 
         ResourceType resourceType = (inventoryResource.item as ResourceItem).type;
 
-        int resourceScore = ItemScores.resourceScores[resourceType];
+        int resourceScore = ScoresHelper.resourceScores[resourceType];
 
         int randomQuantity = _GetRandomQuantity(remainScore, resourceScore);
 
@@ -196,7 +196,7 @@ public class ItemManager : MonoBehaviour
         if (itemRarityRandom == null)
         {
             inventoryItem.rarity = ItemRarity.Simple;
-            remainScore -= ItemScores.itemRarityScores[ItemRarity.Simple];
+            remainScore -= ScoresHelper.itemRarityScores[ItemRarity.Simple];
         }
         else
         {

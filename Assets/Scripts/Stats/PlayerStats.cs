@@ -1,28 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public class PlayerStats : CharacterStats
 {
     [SerializeField]
-    private Image healthImage;
+    HealthBarUI healthBarUI;
 
     [SerializeField]
-    private TextMeshProUGUI healthText;
+    ManaBarUI manaBarUI;
 
     [SerializeField]
     InventoryStatsManagerUI inventoryStatsManager;
-
-    public Dictionary<ItemRarity, float> rarityChance = new()
-    {
-        {ItemRarity.Improved, 50},
-        {ItemRarity.Magical, 30},
-        {ItemRarity.Rare, 5},
-        {ItemRarity.Demonic, 1},
-        {ItemRarity.Set, 0.1f},
-    };
 
     void Start()
     {
@@ -35,23 +24,40 @@ public class PlayerStats : CharacterStats
     {
         if (newItem != null)
         {
-            AddModifiers(newItem);
+            _AddModifiers(newItem);
         }
 
         if (oldItem != null)
         {
-            RemoveModifiers(oldItem);
+            _RemoveModifiers(oldItem);
         }
 
+        _UpdatePointStats();
         inventoryStatsManager.UpdateStats(this);
+
+        OnChangeHealth();
+        OnChangeMana();
     }
 
-    private void AddModifiers(InventoryItem inventoryItem)
+    private void _AddModifiers(InventoryItem inventoryItem)
     {
         var modifiersMap = (inventoryItem.item as Equipment).modifiersMap;
 
-        if (modifiersMap == null) return;
+        if (modifiersMap != null)
+        {
+            _HandleAddModifierMap(modifiersMap);
+        }
 
+        var addModifiersMap = inventoryItem.addModifiers;
+
+        if (addModifiersMap != null)
+        {
+            _HandleAddModifierMap(addModifiersMap);
+        }
+    }
+
+    void _HandleAddModifierMap(Dictionary<Modifier, int> modifiersMap)
+    {
         foreach (var modifier in modifiersMap)
         {
             switch (modifier.Key)
@@ -71,16 +77,35 @@ public class PlayerStats : CharacterStats
                 case Modifier.AttackSpeed:
                     attackSpeed.AddModifier(modifier.Value);
                     break;
+                case Modifier.Health:
+                    health.AddModifier(modifier.Value);
+                    break;
+                case Modifier.Mana:
+                    mana.AddModifier(modifier.Value);
+                    break;
             }
         }
     }
 
-    private void RemoveModifiers(InventoryItem inventoryItem)
+    private void _RemoveModifiers(InventoryItem inventoryItem)
     {
         var modifiersMap = (inventoryItem.item as Equipment).modifiersMap;
 
-        if (modifiersMap == null) return;
+        if (modifiersMap != null)
+        {
+            _HandleRemoveModifiersMap(modifiersMap);
+        }
 
+        var addModifiersMap = inventoryItem.addModifiers;
+
+        if (addModifiersMap != null)
+        {
+            _HandleRemoveModifiersMap(addModifiersMap);
+        }
+    }
+
+    void _HandleRemoveModifiersMap(Dictionary<Modifier, int> modifiersMap)
+    {
         foreach (var modifier in modifiersMap)
         {
             switch (modifier.Key)
@@ -100,19 +125,33 @@ public class PlayerStats : CharacterStats
                 case Modifier.AttackSpeed:
                     attackSpeed.RemoveModifier(modifier.Value);
                     break;
+                case Modifier.Health:
+                    health.RemoveModifier(modifier.Value);
+                    break;
+                case Modifier.Mana:
+                    mana.RemoveModifier(modifier.Value);
+                    break;
             }
         }
+    }
+
+    void _UpdatePointStats()
+    {
+        health.SetStatModifier(strength.GetValue());
     }
 
     public override void OnChangeHealth()
     {
         base.OnChangeHealth();
 
-        float healthPercent = (float)currentHealth / (float)GetMaxHealth();
+        healthBarUI.UpdateHealth(current: health.currentValue, max: GetMaxHealth());
+    }
 
-        healthImage.fillAmount = healthPercent;
+    public override void OnChangeMana()
+    {
+        base.OnChangeMana();
 
-        healthText.text = currentHealth + " / " + GetMaxHealth();
+        manaBarUI.UpdateMana(current: mana.currentValue, max: mana.GetMaxValue());
     }
 
     public override void Die()

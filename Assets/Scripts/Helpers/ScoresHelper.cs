@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public abstract class ItemScores
+public abstract class ScoresHelper
 {
     static public readonly Dictionary<ItemRarity, int> itemRarityScores = new()
     {
@@ -12,21 +12,6 @@ public abstract class ItemScores
         {ItemRarity.Demonic, 400 },
         {ItemRarity.Set, 600 },
     };
-
-    static public List<ItemRarity> GetAvailableEquipmentRarity(int score) 
-    {
-        List<ItemRarity> itemRarities = new(itemRarityScores.Count);
-
-        foreach(var itemRarityScore in itemRarityScores)
-        {
-            if(score >= itemRarityScore.Value && itemRarityScore.Key != ItemRarity.Simple)
-            {
-                itemRarities.Add(itemRarityScore.Key);
-            }
-        }
-
-        return itemRarities;
-    }
 
     static public readonly Dictionary<ResourceType, int> resourceScores = new()
     {

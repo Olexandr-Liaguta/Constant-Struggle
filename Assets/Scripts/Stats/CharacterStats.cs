@@ -10,11 +10,8 @@ public class DamageStats
 
 public class CharacterStats : MonoBehaviour
 {
-    [SerializeField] private int initHealth = 100;
-    public int currentHealth { get; private set; }
-
-    [SerializeField] int initMana = 40;
-    public int currentMana { get; private set; }
+    public PointStat health;
+    public PointStat mana;
 
     public Stat minDamage;
     public Stat maxDamage;
@@ -32,14 +29,19 @@ public class CharacterStats : MonoBehaviour
 
     public void Awake()
     {
-        currentHealth = GetMaxHealth();
+        health.SetStatModifier(strength.GetValue());
+        health.Initialize();
+
+        mana.SetStatModifier(spirit.GetValue());
+        mana.Initialize();
 
         OnChangeHealth();
+        OnChangeMana();
     }
 
     public int GetMaxHealth()
     {
-        return initHealth + (strength.GetValue() * 25);
+        return health.GetMaxValue();
     }
 
     public DamageStats GetCalculatedDamages()
@@ -58,7 +60,7 @@ public class CharacterStats : MonoBehaviour
 
         if (miss)
         {
-            HandlePlayerNotify(0, true, false);
+            HandlePlayerNotify(damage: 0, isMiss: true, isCritical: false);
             return;
         }
 
@@ -72,13 +74,13 @@ public class CharacterStats : MonoBehaviour
 
         damage = Mathf.Clamp(damage, 0, int.MaxValue);
 
-        currentHealth -= damage;
+        health.Decrease(damage);
 
         OnChangeHealth();
 
-        HandlePlayerNotify(damage, false, isCritical);
+        HandlePlayerNotify(damage: damage, isMiss: false, isCritical: isCritical);
 
-        if (currentHealth <= 0)
+        if (health.currentValue <= 0)
         {
             Die();
         }

@@ -56,32 +56,47 @@ public class PlayerStats : CharacterStats
         }
     }
 
-    void _HandleAddModifierMap(Dictionary<Modifier, int> modifiersMap)
+    void _HandleAddModifierMap(Dictionary<Modifier, ModifierValue> modifiersMap)
     {
         foreach (var modifier in modifiersMap)
         {
             switch (modifier.Key)
             {
                 case Modifier.Armor:
-                    armor.AddModifier(modifier.Value);
+                    armor.AddModifier(modifier.Value.value);
                     break;
 
-                case Modifier.MinDamage:
-                    minDamage.AddModifier(modifier.Value);
-                    break;
-
-                case Modifier.MaxDamage:
-                    maxDamage.AddModifier(modifier.Value);
+                case Modifier.Damage:
+                    minDamage.AddModifier(modifier.Value.min);
+                    maxDamage.AddModifier(modifier.Value.max);
                     break;
 
                 case Modifier.AttackSpeed:
-                    attackSpeed.AddModifier(modifier.Value);
+                    attackSpeed.AddModifier(modifier.Value.value);
                     break;
+
                 case Modifier.Health:
-                    health.AddModifier(modifier.Value);
+                    health.AddModifier(modifier.Value.value);
                     break;
+
                 case Modifier.Mana:
-                    mana.AddModifier(modifier.Value);
+                    mana.AddModifier(modifier.Value.value);
+                    break;
+                
+                case Modifier.Accuracy:
+                    accuracy.AddModifier(modifier.Value.value);
+                    break;
+                
+                case Modifier.Agility:
+                    agility.AddModifier(modifier.Value.value);
+                    break;
+                    
+                case Modifier.Spirit:
+                    spirit.AddModifier(modifier.Value.value);
+                    break;
+                
+                case Modifier.Strength:
+                    strength.AddModifier(modifier.Value.value);
                     break;
             }
         }
@@ -104,32 +119,47 @@ public class PlayerStats : CharacterStats
         }
     }
 
-    void _HandleRemoveModifiersMap(Dictionary<Modifier, int> modifiersMap)
+    void _HandleRemoveModifiersMap(Dictionary<Modifier, ModifierValue> modifiersMap)
     {
         foreach (var modifier in modifiersMap)
         {
             switch (modifier.Key)
             {
                 case Modifier.Armor:
-                    armor.RemoveModifier(modifier.Value);
+                    armor.RemoveModifier(modifier.Value.value);
                     break;
 
-                case Modifier.MinDamage:
-                    minDamage.RemoveModifier(modifier.Value);
-                    break;
-
-                case Modifier.MaxDamage:
-                    maxDamage.RemoveModifier(modifier.Value);
+                case Modifier.Damage:
+                    minDamage.RemoveModifier(modifier.Value.min);
+                    maxDamage.RemoveModifier(modifier.Value.max);
                     break;
 
                 case Modifier.AttackSpeed:
-                    attackSpeed.RemoveModifier(modifier.Value);
+                    attackSpeed.RemoveModifier(modifier.Value.value);
                     break;
+
                 case Modifier.Health:
-                    health.RemoveModifier(modifier.Value);
+                    health.RemoveModifier(modifier.Value.value);
                     break;
+
                 case Modifier.Mana:
-                    mana.RemoveModifier(modifier.Value);
+                    mana.RemoveModifier(modifier.Value.value);
+                    break;
+
+                case Modifier.Accuracy:
+                    accuracy.RemoveModifier(modifier.Value.value);
+                    break;
+
+                case Modifier.Agility:
+                    agility.RemoveModifier(modifier.Value.value);
+                    break;
+
+                case Modifier.Spirit:
+                    spirit.RemoveModifier(modifier.Value.value);
+                    break;
+
+                case Modifier.Strength:
+                    strength.RemoveModifier(modifier.Value.value);
                     break;
             }
         }

@@ -5,75 +5,66 @@ using UnityEngine;
 
 public enum Modifier
 {
-    MinDamage,
-    MaxDamage,
+    Damage,
     AttackSpeed,
     Armor,
     Health,
     Mana,
+    Strength,
+    Spirit,
+    Accuracy,
+    Agility,
 }
 
 public class ItemRarityRandom
 {
     public int rarityScore;
     public ItemRarity itemRarity;
-    public Dictionary<Modifier, int> modifiers = new();
+    public Dictionary<Modifier, ModifierValue> modifiers = new();
 }
 
 public class ItemRarityManager : MonoBehaviour
 {
     [SerializeField] PlayerStats playerStats;
 
-
-
+    ItemRarity[] itemRaritiesForHanlde = new ItemRarity[5]
+    {
+        ItemRarity.Set,
+        ItemRarity.Demonic,
+        ItemRarity.Rare,
+        ItemRarity.Magical,
+        ItemRarity.Improved,
+    };
     public ItemRarityRandom? GetRandom(int score)
     {
-        List<ItemRarity> itemRarities = RarityHelper.GetAvailableEquipmentRarity(score);
+        List<ItemRarity> availableItemRarities = RarityHelper.GetAvailableEquipmentRarity(score);
 
-        if (itemRarities.Count == 0)
+        if (availableItemRarities.Count == 0)
         {
             return null;
         }
 
-        ItemRarity itemRarity = HandleItemRarity();
+        ItemRarity itemRarity = HandleItemRarity(availableItemRarities);
 
         ItemRarityRandom itemRarityRandom = HandleModifiers(itemRarity);
 
         return itemRarityRandom;
     }
 
-    ItemRarity HandleItemRarity()
+    ItemRarity HandleItemRarity(List<ItemRarity> availableItemRarities)
     {
         float random = Random.Range(0f, 100f);
 
-        float chance = RarityHelper.rarityChance[ItemRarity.Set];
-        if (random < chance)
+        foreach (ItemRarity rarity in itemRaritiesForHanlde)
         {
-            return ItemRarity.Set;
-        }
-
-        chance = RarityHelper.rarityChance[ItemRarity.Demonic];
-        if (random < chance)
-        {
-            return ItemRarity.Demonic;
-        }
-
-        chance = RarityHelper.rarityChance[ItemRarity.Rare];
-        if (random < chance)
-        {
-            return ItemRarity.Rare;
-        }
-
-        chance = RarityHelper.rarityChance[ItemRarity.Magical];
-        if (random < chance)
-        {
-            return ItemRarity.Magical;
-        }
-
-        chance = RarityHelper.rarityChance[ItemRarity.Improved];
-        if (random < chance)
-        {
-            return ItemRarity.Improved;
+            if (availableItemRarities.Contains(rarity))
+            {
+                float chance = RarityHelper.rarityChance[rarity];
+                if (random < chance)
+                {
+                    return rarity;
+                }
+            }
         }
 
         return ItemRarity.Simple;
@@ -98,6 +89,7 @@ public class ItemRarityManager : MonoBehaviour
         for (int i = 0; i < randomModifiersCount; i++)
         {
             int randomModifierIndex = Random.Range(0, modifiers.Count);
+
             Modifier randomModifier = modifiers[randomModifierIndex];
 
             int modifierScore = ScoresHelper.modifierScore[randomModifier];
@@ -106,7 +98,15 @@ public class ItemRarityManager : MonoBehaviour
 
             int modifierValue = availableScore / modifierScore;
 
-            itemRarityRandom.modifiers.Add(randomModifier, modifierValue);
+            if (randomModifier == Modifier.Damage)
+            {
+                itemRarityRandom.modifiers.Add(randomModifier, new ModifierValue(min: modifierValue, max: modifierValue));
+
+            }
+            else
+            {
+                itemRarityRandom.modifiers.Add(randomModifier, new ModifierValue(modifierValue));
+            }
 
             itemRarityRandom.rarityScore += modifierValue * modifierScore;
 

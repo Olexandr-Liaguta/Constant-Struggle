@@ -18,7 +18,7 @@ public class InventoryItem
     public readonly Guid id;
 
     public ItemRarity rarity;
-    public Dictionary<Modifier, int> addModifiers = new();
+    public Dictionary<Modifier, ModifierValue> addModifiers = new();
 
     public InventoryItem(Item _item)
     {

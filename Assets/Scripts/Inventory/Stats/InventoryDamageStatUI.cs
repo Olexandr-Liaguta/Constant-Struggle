@@ -6,11 +6,10 @@ using TMPro;
 public class InventoryDamageStatUI : MonoBehaviour
 {
     [SerializeField]
-    private TextMeshProUGUI min, max;
+    private TextMeshProUGUI textComponent;
 
     public void SetStats(int minValue, int maxValue)
     {
-        min.text = minValue.ToString();
-        max.text = maxValue.ToString();
+        textComponent.text = minValue.ToString() + " - " + maxValue.ToString();
     }
 }

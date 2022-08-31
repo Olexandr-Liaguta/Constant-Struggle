@@ -9,6 +9,6 @@ public class ShieldEquipment : Equipment
 
     public override void OnLaunch()
     {
-        modifiersMap.Add(Modifier.Armor, armor);
+        modifiersMap.Add(Modifier.Armor, new ModifierValue(armor));
     }
 }

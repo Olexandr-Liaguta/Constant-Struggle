@@ -7,12 +7,26 @@ public class TooltipStatUI : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI titleTextComponent, valueTextComponent;
 
-    public void SetStatText(string title, string value, bool isAdditional)
+    public void SetStatText(string title, ModifierValue value, bool isAdditional)
     {
         titleTextComponent.text = title;
-        valueTextComponent.text = value;
 
-        if(isAdditional)
+        if (value.value == 0)
+        {
+            if (value.min == value.max)
+            {
+                valueTextComponent.text = value.max.ToString();
+            } else
+            {
+                valueTextComponent.text = value.min.ToString() + " - " + value.max.ToString();
+            }
+        }
+        else
+        {
+            valueTextComponent.text = value.value.ToString();
+        }
+
+        if (isAdditional)
         {
             titleTextComponent.color = Color.blue;
             valueTextComponent.color = Color.blue;

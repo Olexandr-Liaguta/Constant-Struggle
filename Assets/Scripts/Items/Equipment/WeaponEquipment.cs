@@ -11,8 +11,7 @@ public class WeaponEquipment : Equipment
 
     public override void OnLaunch()
     {
-        modifiersMap.Add(Modifier.MinDamage, minDamage);
-        modifiersMap.Add(Modifier.MaxDamage, maxDamage);
-        modifiersMap.Add(Modifier.AttackSpeed, attackSpeed);
+        modifiersMap.Add(Modifier.Damage, new ModifierValue(min: minDamage, max: maxDamage));
+        modifiersMap.Add(Modifier.AttackSpeed, new ModifierValue(attackSpeed));
     }
 }

@@ -37,8 +37,10 @@ public class Tooltip : MonoBehaviour
         {Modifier.AttackSpeed, "Attack speed" },
         {Modifier.Health, "Health" },
         {Modifier.Mana, "Mana" },
-        {Modifier.MaxDamage, "Max damage" },
-        {Modifier.MinDamage, "Min damage" },
+        {Modifier.Damage, "Damage" },
+        {Modifier.Accuracy, "Accuracy" },
+        {Modifier.Spirit, "Spirit" },
+        {Modifier.Strength, "Strength" },
     };
 
 
@@ -88,7 +90,7 @@ public class Tooltip : MonoBehaviour
         mainTooltip.SetActive(true);
     }
 
-    void InstantiateTooltipStatPrefab(Transform parentTransform, KeyValuePair<Modifier, int> modifierAndValue, bool isAdditional)
+    void InstantiateTooltipStatPrefab(Transform parentTransform, KeyValuePair<Modifier, ModifierValue> modifierAndValue, bool isAdditional)
     {
         var instantiatedTooltipPrefab = Instantiate(tooltipStatPrefab);
 
@@ -96,7 +98,7 @@ public class Tooltip : MonoBehaviour
 
         var tooltipStatUI = instantiatedTooltipPrefab.GetComponent<TooltipStatUI>();
 
-        tooltipStatUI.SetStatText(modifierStrings[modifierAndValue.Key], modifierAndValue.Value.ToString(), isAdditional);
+        tooltipStatUI.SetStatText(modifierStrings[modifierAndValue.Key], modifierAndValue.Value, isAdditional);
 
         instantiatedTooltipStatGOs.Add(instantiatedTooltipPrefab);
     }

@@ -27,8 +27,11 @@ public abstract class ScoresHelper
         { Modifier.AttackSpeed, 6 },
         { Modifier.Health, 1 },
         { Modifier.Mana, 1 },
-        { Modifier.MaxDamage, 1 },
-        { Modifier.MinDamage, 2 },
+        { Modifier.Damage, 2 },
+        { Modifier.Accuracy, 3 },
+        { Modifier.Agility, 3 },
+        { Modifier.Spirit, 3 },
+        { Modifier.Strength, 3 },
     };
 
 }

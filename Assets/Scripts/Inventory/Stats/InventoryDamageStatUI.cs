@@ -8,7 +8,7 @@ public class InventoryDamageStatUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI textComponent;
 
-    public void SetStats(int minValue, int maxValue)
+    public void SetStats(float minValue, float maxValue)
     {
         textComponent.text = minValue.ToString() + " - " + maxValue.ToString();
     }

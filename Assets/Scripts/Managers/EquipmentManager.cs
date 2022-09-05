@@ -142,7 +142,7 @@ public class EquipmentManager : MonoBehaviour
 
             if (onEquipmentChanged != null)
             {
-                onEquipmentChanged.Invoke(equipmentSlot, newInventoryItem, oldInventoryItem);
+                onEquipmentChanged.Invoke(equipmentSlot, newInventoryItem, null);
             }
 
         }

@@ -41,6 +41,7 @@ public class Tooltip : MonoBehaviour
         {Modifier.Accuracy, "Accuracy" },
         {Modifier.Spirit, "Spirit" },
         {Modifier.Strength, "Strength" },
+        {Modifier.Agility, "Agility" },
     };
 
 

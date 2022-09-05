@@ -12,12 +12,12 @@ public class HealthBarUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI healthText;
 
-    public void UpdateHealth(int current, int max)
+    public void UpdateHealth(float current, float max)
     {
-        float healthPercent = current / (float)max;
+        float healthPercent = current / max;
 
         healthImage.fillAmount = healthPercent;
 
-        healthText.text = current + " / " + max;
+        healthText.text = (int)current + " / " + (int)max;
     }
 }

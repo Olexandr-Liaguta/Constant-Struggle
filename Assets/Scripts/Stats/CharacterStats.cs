@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class DamageStats
 {
-    public int minDamage;
-    public int maxDamage;
+    public float minDamage;
+    public float maxDamage;
     public bool isMiss = false;
     public bool isCrititcal = false;
 }
@@ -39,7 +39,7 @@ public class CharacterStats : MonoBehaviour
         OnChangeMana();
     }
 
-    public int GetMaxHealth()
+    public float GetMaxHealth()
     {
         return health.GetMaxValue();
     }
@@ -56,29 +56,29 @@ public class CharacterStats : MonoBehaviour
 
     public void TakeDamage(CharacterStats enemyStats)
     {
-        bool miss = HandleMiss(enemyStats);
+        bool miss = _HandleMiss(enemyStats);
 
         if (miss)
         {
-            HandlePlayerNotify(damage: 0, isMiss: true, isCritical: false);
+            _HandlePlayerNotify(damage: 0, isMiss: true, isCritical: false);
             return;
         }
 
         DamageStats enemyDamageStats = enemyStats.GetCalculatedDamages();
 
-        HandleArmor(enemyDamageStats);
+        _HandleArmor(enemyDamageStats);
 
-        bool isCritical = HandleCritical(enemyDamageStats, enemyStats);
+        bool isCritical = _HandleCritical(enemyDamageStats, enemyStats);
 
-        int damage = Random.Range(enemyDamageStats.minDamage, enemyDamageStats.maxDamage);
+        float damage = Random.Range(enemyDamageStats.minDamage, enemyDamageStats.maxDamage);
 
-        damage = Mathf.Clamp(damage, 0, int.MaxValue);
+        damage = Mathf.Clamp(damage, 0, float.MaxValue);
 
         health.Decrease(damage);
 
         OnChangeHealth();
 
-        HandlePlayerNotify(damage: damage, isMiss: false, isCritical: isCritical);
+        _HandlePlayerNotify(damage: damage, isMiss: false, isCritical: isCritical);
 
         if (health.currentValue <= 0)
         {
@@ -86,7 +86,7 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    private bool HandleMiss(CharacterStats enemyStats)
+    private bool _HandleMiss(CharacterStats enemyStats)
     {
         int agilityValue = agility.GetValue();
         int enemyAccuracy = enemyStats.accuracy.GetValue();
@@ -106,13 +106,17 @@ public class CharacterStats : MonoBehaviour
         return false;
     }
 
-    private void HandleArmor(DamageStats enemyDamageStats)
+    private void _HandleArmor(DamageStats enemyDamageStats)
     {
-        enemyDamageStats.minDamage -= armor.GetValue();
-        enemyDamageStats.maxDamage -= armor.GetValue();
+        int armorValue = armor.GetValue();
+
+        float damagePercent = 100f / (100f + (float)armorValue);
+
+        enemyDamageStats.minDamage *= damagePercent;
+        enemyDamageStats.maxDamage *= damagePercent;
     }
 
-    private bool HandleCritical(DamageStats enemyDamageStats, CharacterStats enemyStats)
+    private bool _HandleCritical(DamageStats enemyDamageStats, CharacterStats enemyStats)
     {
         int spiritValue = spirit.GetValue();
         int enemyAccuracy = enemyStats.accuracy.GetValue();
@@ -136,11 +140,11 @@ public class CharacterStats : MonoBehaviour
         return false;
     }
 
-    private void HandlePlayerNotify(int damage, bool isMiss, bool isCritical)
+    private void _HandlePlayerNotify(float damage, bool isMiss, bool isCritical)
     {
         if (!gameObject.CompareTag("Player"))
         {
-            NotifyManager.instance.ShowAttackNotify(damage, isMiss, isCritical);
+            NotifyManager.instance.ShowAttackNotify((int)damage, isMiss, isCritical);
         }
     }
 

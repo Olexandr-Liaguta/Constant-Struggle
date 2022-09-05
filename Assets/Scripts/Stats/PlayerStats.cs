@@ -22,14 +22,14 @@ public class PlayerStats : CharacterStats
 
     void OnEquipmentChange(EquipmentSlotExact slot, InventoryItem newItem, InventoryItem oldItem)
     {
-        if (newItem != null)
-        {
-            _AddModifiers(newItem);
-        }
-
         if (oldItem != null)
         {
             _RemoveModifiers(oldItem);
+        }
+
+        if (newItem != null)
+        {
+            _AddModifiers(newItem);
         }
 
         _UpdatePointStats();

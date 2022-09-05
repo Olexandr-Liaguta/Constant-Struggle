@@ -12,12 +12,12 @@ public class ManaBarUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI manaText;
 
-    public void UpdateMana(int current, int max)
+    public void UpdateMana(float current, float max)
     {
-        float manaPercent = current / (float)max;
+        float manaPercent = current / max;
 
         manaImage.fillAmount = manaPercent;
 
-        manaText.text = current + " / " + max;
+        manaText.text = (int)current + " / " + (int)max;
     }
 }

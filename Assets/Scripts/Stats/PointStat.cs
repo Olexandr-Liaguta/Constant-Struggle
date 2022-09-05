@@ -6,40 +6,40 @@ using UnityEngine;
 public class PointStat
 {
     [SerializeField]
-    private int baseValue;
+    private float baseValue;
 
     private List<int> _modifiers = new();
 
     int _statModifier = 0;
     int _statModifierMultiplier = 50;
-    public int currentValue { get; private set; }
+    public float currentValue { get; private set; }
 
     public void Initialize()
     {
         currentValue = GetMaxValue();
     }
 
-    public int GetMaxValue()
+    public float GetMaxValue()
     {
-        int maxValue = baseValue;
+        float maxValue = baseValue;
         _modifiers.ForEach(x => maxValue += x);
         maxValue += _statModifier * _statModifierMultiplier;
 
         return maxValue;
     }
 
-    public int Decrease(int by)
+    public float Decrease(float by)
     {
         currentValue -= by;
 
         return currentValue;
     }
 
-    public int Increase(int by)
+    public float Increase(float by)
     {
         currentValue += by;
 
-        int maxValue = GetMaxValue();
+        float maxValue = GetMaxValue();
 
         if(currentValue > maxValue)
         {

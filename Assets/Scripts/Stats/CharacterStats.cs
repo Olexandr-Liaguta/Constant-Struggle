@@ -26,6 +26,12 @@ public class CharacterStats : MonoBehaviour
 
     public Stat maxHandleWeight;
 
+    float healthRegenerationSpeed = 1f;
+    public Stat healthRegeneration;
+    
+    float manaRegenerationSpeed = 3f;
+    public Stat manaRegeneration;
+
 
     public void Awake()
     {
@@ -37,6 +43,19 @@ public class CharacterStats : MonoBehaviour
 
         OnChangeHealth();
         OnChangeMana();
+    }
+
+    private void Update()
+    {
+        _HandleRegeneration();
+    }
+
+    void _HandleRegeneration()
+    {
+        health.Increase(Time.deltaTime * healthRegenerationSpeed * (float)healthRegeneration.GetValue());
+        mana.Increase(Time.deltaTime * manaRegenerationSpeed * (float)manaRegeneration.GetValue());
+
+        OnChangeHealth();
     }
 
     public float GetMaxHealth()

@@ -42,6 +42,8 @@ public class Tooltip : MonoBehaviour
         {Modifier.Spirit, "Spirit" },
         {Modifier.Strength, "Strength" },
         {Modifier.Agility, "Agility" },
+        {Modifier.HealthRegeneration, "Health regeneration" },
+        {Modifier.ManaRegeneration, "Mana regeneration" },
     };
 
 

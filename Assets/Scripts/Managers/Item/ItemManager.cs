@@ -178,7 +178,9 @@ public class ItemManager : MonoBehaviour
 
     int _GetRandomQuantity(int remainScore, int resourceScore)
     {
-        int avaibleQuantity = (int)(remainScore / resourceScore);
+        int quantityLimit = 200;
+
+        int avaibleQuantity = Mathf.Clamp(remainScore / resourceScore, 0, quantityLimit);
         return Random.Range(1, avaibleQuantity);
     }
 

@@ -32,6 +32,8 @@ public abstract class ScoresHelper
         { Modifier.Agility, 3 },
         { Modifier.Spirit, 3 },
         { Modifier.Strength, 3 },
+        { Modifier.HealthRegeneration, 6 },
+        { Modifier.ManaRegeneration, 3 },
     };
 
 }

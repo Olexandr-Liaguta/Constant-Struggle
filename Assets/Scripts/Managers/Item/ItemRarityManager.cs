@@ -14,6 +14,8 @@ public enum Modifier
     Spirit,
     Accuracy,
     Agility,
+    HealthRegeneration,
+    ManaRegeneration,
 }
 
 public class ItemRarityRandom

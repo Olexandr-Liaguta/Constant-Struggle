@@ -98,6 +98,12 @@ public class PlayerStats : CharacterStats
                 case Modifier.Strength:
                     strength.AddModifier(modifier.Value.value);
                     break;
+                case Modifier.HealthRegeneration:
+                    healthRegeneration.AddModifier(modifier.Value.value);
+                    break;
+                case Modifier.ManaRegeneration:
+                    manaRegeneration.AddModifier(modifier.Value.value);
+                    break;
             }
         }
     }
@@ -160,6 +166,12 @@ public class PlayerStats : CharacterStats
 
                 case Modifier.Strength:
                     strength.RemoveModifier(modifier.Value.value);
+                    break;
+                case Modifier.HealthRegeneration:
+                    healthRegeneration.RemoveModifier(modifier.Value.value);
+                    break;
+                case Modifier.ManaRegeneration:
+                    manaRegeneration.RemoveModifier(modifier.Value.value);
                     break;
             }
         }

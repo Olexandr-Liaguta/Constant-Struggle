@@ -7,15 +7,18 @@ public class PlayerCombat : MonoBehaviour
     public float attackRadius = 3f;
     public LayerMask attackMask;
 
-    private CharacterCombat playerCombat;
+    CharacterCombat playerCombat;
 
-    private EnemyStats enemyStats;
+    EnemyStats enemyStats;
 
-    private int? enemyInstanceId = null;
+    int? enemyInstanceId = null;
 
     [SerializeField]
-    private GameObject focusAttackPrefab;
-    private GameObject instantiatedFocusAttackPrefab;
+    GameObject focusAttackPrefab;
+    GameObject instantiatedFocusAttackPrefab;
+
+    [SerializeField]
+    EnemyHealthUI enemyHealthUI;
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +48,8 @@ public class PlayerCombat : MonoBehaviour
                     if (colliderInstanceId == enemyInstanceId)
                     {
                         HitEnemy(hitCollider);
+
+                        ShowEnemyHealth();
 
                         return;
                     }
@@ -81,6 +86,13 @@ public class PlayerCombat : MonoBehaviour
         instantiatedFocusAttackPrefab.transform.parent = collider.transform;
 
         instantiatedFocusAttackPrefab.transform.localPosition = new Vector3(0f, 0f, 0f);
+
+        ShowEnemyHealth();
+    }
+
+    void ShowEnemyHealth()
+    {
+        enemyHealthUI.Show(enemyStats);
     }
 
     private void FaceTarget(Collider collider)
@@ -96,6 +108,7 @@ public class PlayerCombat : MonoBehaviour
         {
             Destroy(instantiatedFocusAttackPrefab);
         }
+        enemyHealthUI.Hide();
     }
 
 

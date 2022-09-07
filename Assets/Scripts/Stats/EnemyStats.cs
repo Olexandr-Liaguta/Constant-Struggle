@@ -10,6 +10,8 @@ public class EnemyStats : CharacterStats
 
     public int score = 25;
 
+    public string enemyName = "Enemy";
+
     public override void Die()
     {
         base.Die();

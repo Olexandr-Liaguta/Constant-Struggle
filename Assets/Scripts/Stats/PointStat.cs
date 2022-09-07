@@ -28,6 +28,11 @@ public class PointStat
         return maxValue;
     }
 
+    public float GetAmount01()
+    {
+        return currentValue / GetMaxValue();
+    }
+
     public float Decrease(float by)
     {
         currentValue -= by;
@@ -41,7 +46,7 @@ public class PointStat
 
         float maxValue = GetMaxValue();
 
-        if(currentValue > maxValue)
+        if (currentValue > maxValue)
         {
             currentValue = maxValue;
         }
@@ -52,7 +57,7 @@ public class PointStat
     public void SetStatModifier(int statModifier)
     {
         _statModifier = statModifier;
-    } 
+    }
 
     public void AddModifier(int modifier)
     {

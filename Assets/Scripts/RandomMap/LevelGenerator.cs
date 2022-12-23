@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
@@ -12,6 +10,14 @@ public class LevelGenerator : MonoBehaviour
 
     void Start()
     {
+        Vector3 tileSize = tilePrefab.GetComponent<MeshRenderer>().bounds.size;
+
+        float maxDistanceZ = tileSize.z * mapWidthInTiles;
+        LevelGeneratorManager.instance.maxDistanceZ = maxDistanceZ;
+        LevelGeneratorManager.instance.centerVertexZ = maxDistanceZ / 2;
+
+        Debug.Log("Max Distance: " + maxDistanceZ.ToString());
+
         GenerateMap();
     }
     void GenerateMap()

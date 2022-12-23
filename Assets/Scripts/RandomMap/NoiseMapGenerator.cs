@@ -12,7 +12,7 @@ public class Wave
 
 public class NoiseMapGenerator : MonoBehaviour
 {
-    public float[,] GenerateNoiseMap(int mapDepth, int mapWidth, float scale, float offsetX, float offsetZ, Wave[] waves)
+    public float[,] GeneratePerlinNoiseMap(int mapDepth, int mapWidth, float scale, float offsetX, float offsetZ, Wave[] waves)
     {
         // create an empty noise map with the mapDepth and mapWidth coordinates
         float[,] noiseMap = new float[mapDepth, mapWidth];
@@ -34,6 +34,25 @@ public class NoiseMapGenerator : MonoBehaviour
                 // normalize the noise value so that it is within 0 and 1
                 noise /= normalization;
                 noiseMap[zIndex, xIndex] = noise;
+            }
+        }
+        return noiseMap;
+    }
+
+    public float[,] GenerateUniformNoiseMap(int mapDepth, int mapWidth, float centerVertexZ, float maxDistanceZ, float offsetZ)
+    {
+        // create an empty noise map with the mapDepth and mapWidth coordinates
+        float[,] noiseMap = new float[mapDepth, mapWidth];
+        for (int zIndex = 0; zIndex < mapDepth; zIndex++)
+        {
+            // calculate the sampleZ by summing the index and the offset
+            float sampleZ = zIndex + offsetZ;
+            // calculate the noise proportional to the distance of the sample to the center of the level
+            float noise = Mathf.Abs(sampleZ - centerVertexZ) / maxDistanceZ;
+            // apply the noise for all points with this Z coordinate
+            for (int xIndex = 0; xIndex < mapWidth; xIndex++)
+            {
+                noiseMap[mapDepth - zIndex - 1, xIndex] = noise;
             }
         }
         return noiseMap;

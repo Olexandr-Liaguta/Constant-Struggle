@@ -112,21 +112,78 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ee29509e81656a40ab3ebeb9f0ac771, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainTypes:
+  biomes:
+  - biomes:
+    - name: desert
+      color: {r: 0.9716981, g: 0.8803175, b: 0.114587024, a: 0}
+    - name: grassland
+      color: {r: 0.22256765, g: 0.972549, b: 0.1137255, a: 0}
+    - name: tundra
+      color: {r: 0.14951938, g: 0.9056604, b: 0.7502764, a: 0}
+    - name: tundra
+      color: {r: 0.14951938, g: 0.9056604, b: 0.7502764, a: 0}
+  - biomes:
+    - name: savanna
+      color: {r: 0.1137255, g: 0.972549, b: 0.16991457, a: 0}
+    - name: savanna
+      color: {r: 0.22256765, g: 0.972549, b: 0.1137255, a: 0}
+    - name: 'boreal forest '
+      color: {r: 0.021537915, g: 0.41509432, b: 0.07019575, a: 0}
+    - name: tundra
+      color: {r: 0.14951938, g: 0.9056604, b: 0.7502764, a: 0}
+  - biomes:
+    - name: tropical rainforest
+      color: {r: 0.27320686, g: 0.03604484, b: 0.8490566, a: 0}
+    - name: boreal forest
+      color: {r: 0.078692354, g: 0.4339623, b: 0.026610907, a: 0}
+    - name: 'boreal forest '
+      color: {r: 0.021537915, g: 0.41509432, b: 0.07019575, a: 0}
+    - name: tundra
+      color: {r: 0.14951938, g: 0.9056604, b: 0.7502764, a: 0}
+  - biomes:
+    - name: tropical rainforest
+      color: {r: 0.27320686, g: 0.03604484, b: 0.8490566, a: 0}
+    - name: tropical rainforest
+      color: {r: 0.27320686, g: 0.03604484, b: 0.8490566, a: 0}
+    - name: tundra
+      color: {r: 0.14951938, g: 0.9056604, b: 0.7502764, a: 0}
+    - name: tundra
+      color: {r: 0.14951938, g: 0.9056604, b: 0.7502764, a: 0}
+  heightTerrainTypes:
   - name: water
-    height: 0.4
-    color: {r: 0.08784264, g: 0.5314604, b: 0.8867924, a: 0}
+    height: 0.3
+    color: {r: 0.080322154, g: 0.86291486, b: 0.8962264, a: 0}
+    index: 0
   - name: grass
     height: 0.7
-    color: {r: 0.10957508, g: 0.6886792, b: 0.022739422, a: 0}
+    color: {r: 0.12883946, g: 0.8980392, b: 0.07843137, a: 0}
+    index: 1
   - name: mountain
     height: 1
-    color: {r: 0.38679248, g: 0.16474748, b: 0.031016383, a: 0}
+    color: {r: 0.3301887, g: 0.1283248, b: 0.0140174385, a: 0}
+    index: 2
+  heatTerrainTypes:
+  - name: hottest
+    height: 0.05
+    color: {r: 0.8962264, g: 0.08877714, b: 0.08877714, a: 0}
+    index: 0
+  - name: hot
+    height: 0.25
+    color: {r: 0.8980392, g: 0.75998586, b: 0.09019609, a: 0}
+    index: 1
+  - name: cold
+    height: 0.5
+    color: {r: 0.09019609, g: 0.3615495, b: 0.8980392, a: 0}
+    index: 2
+  - name: coldest
+    height: 0.75
+    color: {r: 0.55998576, g: 0.9092011, b: 0.9811321, a: 0}
+    index: 3
   noiseMapGenerator: {fileID: 4118544239950731595}
   tileRenderer: {fileID: 4118544239950731598}
   meshFilter: {fileID: 4118544239950731597}
   meshCollider: {fileID: 4118544239950731599}
-  mapScale: 3
+  levelScale: 5
   heightMultiplier: 2
   heightCurve:
     serializedVersion: 2
@@ -150,28 +207,10 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.12619299
     - serializedVersion: 3
-      time: 0.46663415
-      value: 0.008967353
-      inSlope: 0.23879871
-      outSlope: 0.23879871
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.61020875
-      value: 0.15469861
-      inSlope: 1.5918107
-      outSlope: 1.5918107
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2.1686003
-      outSlope: 2.1686003
+      inSlope: 1.2556044
+      outSlope: 1.2556044
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
@@ -179,10 +218,109 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  waves:
-  - seed: 300
+  heightWaves:
+  - seed: 21312
+    frequency: 0.5
+    amplitude: 0.5
+  - seed: 2222
     frequency: 0.2
-    amplitude: 0.1
+    amplitude: 2
+  visualizationMode: 3
+  heatCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.40073067
+      value: 0.069720395
+      inSlope: 0.5952758
+      outSlope: 0.5952758
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  heatWaves:
+  - seed: 2131
+    frequency: 1
+    amplitude: 2
+  - seed: 12312
+    frequency: 0.2
+    amplitude: 1
+  moistureTerrainTypes:
+  - name: dryest
+    height: 0.25
+    color: {r: 0.9056604, g: 0.13243146, b: 0.13243146, a: 0}
+    index: 0
+  - name: dry
+    height: 0.5
+    color: {r: 0.8490566, g: 0.7546649, b: 0.13216448, a: 0}
+    index: 0
+  - name: wet
+    height: 0.75
+    color: {r: 0.15107687, g: 0.83055025, b: 0.9150943, a: 0}
+    index: 0
+  - name: wettest
+    height: 1
+    color: {r: 0, g: 0.12541866, b: 0.9339623, a: 0}
+    index: 0
+  moistureCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.41067892
+      value: 0.07159037
+      inSlope: 0.6541184
+      outSlope: 0.6541184
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  moistureWaves:
+  - seed: 3242
+    frequency: 0.5
+    amplitude: 1
+  waterColor: {r: 0.02180491, g: 0.44846123, b: 0.9245283, a: 0}
 --- !u!114 &4118544239950731595
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
+    public enum DrawMode { NoiseMap, ColourMap }
+    public DrawMode drawMode = DrawMode.NoiseMap;
+
     public int mapWidth, mapHeight;
     public float noiseScale;
 
@@ -14,6 +18,8 @@ public class MapGenerator : MonoBehaviour
 
     public int seed;
     public Vector2 offset;
+
+    public TerrainType[] regions;
 
     public bool autoUpdate;
 
@@ -30,8 +36,72 @@ public class MapGenerator : MonoBehaviour
             offset: offset
             );
 
+        Color[] colourMap = GenerateColourMap(noiseMap);
+
         MapDisplay display = FindObjectOfType<MapDisplay>();
-        display.DrawNoiseMap(noiseMap);
+
+        if (drawMode == DrawMode.NoiseMap)
+        {
+            display.DrawTexture(TextureGenerator.TextureFromHeightMap(noiseMap));
+        }
+        else if (drawMode == DrawMode.ColourMap)
+        {
+            display.DrawTexture(
+                TextureGenerator.TextureFromColourMap(
+                    colourMap: colourMap,
+                    width: mapWidth,
+                    height: mapHeight
+                )
+            );
+        }
+
+    }
+
+    private Color[] GenerateColourMap(float[,] noiseMap)
+    {
+        TerrainType[] filteredRegions = GetFilteredRegions();
+
+        Color[] colourMap = new Color[mapWidth * mapHeight];
+
+        for (int y = 0; y < mapHeight; y++)
+        {
+            for (int x = 0; x < mapWidth; x++)
+            {
+                float currentHeight = noiseMap[x, y];
+
+                for (int i = 0; i < filteredRegions.Length; i++)
+                {
+                    if (currentHeight <= filteredRegions[i].height)
+                    {
+                        colourMap[y * mapWidth + x] = filteredRegions[i].colour;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return colourMap;
+    }
+
+    private TerrainType[] GetFilteredRegions()
+    {
+        TerrainType[] filteredTerrains = new TerrainType[regions.Length];
+
+        float[] terrainsHeights = new float[regions.Length];
+        for (int i = 0; i < regions.Length; i++)
+        {
+            terrainsHeights[i] = regions[i].height;
+        }
+
+        for (int i = 0; i < regions.Length; i++)
+        {
+            float minHeight = terrainsHeights.Min();
+            TerrainType terrainType = regions.SingleOrDefault(region => region.height == minHeight);
+            filteredTerrains[i] = terrainType;
+            terrainsHeights = terrainsHeights.Where(height => height != minHeight).ToArray();
+        }
+
+        return filteredTerrains;
     }
 
     private void OnValidate()
@@ -59,7 +129,8 @@ public class MapGenerator : MonoBehaviour
 }
 
 [System.Serializable]
-public struct TerrainType {
+public struct TerrainType
+{
     public string name;
     public float height;
     public Color colour;

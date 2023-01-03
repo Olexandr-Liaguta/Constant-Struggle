@@ -39,7 +39,7 @@ public class TileGenerator : MonoBehaviour
     private TerrainType[] heatTerrainTypes;
 
     [SerializeField]
-    NoiseMapGenerator noiseMapGenerator;
+    NoiseMapGenerator noiseMapGeneration;
 
     [SerializeField]
     private MeshRenderer tileRenderer;
@@ -79,7 +79,7 @@ public class TileGenerator : MonoBehaviour
 
     [SerializeField]
     private Wave[] moistureWaves;
-    
+
     [SerializeField]
     private Color waterColor;
 
@@ -88,7 +88,7 @@ public class TileGenerator : MonoBehaviour
     {
         GenerateTile(LevelGeneratorManager.instance.centerVertexZ, LevelGeneratorManager.instance.maxDistanceZ);
     }
-    public void GenerateTile(float centerVertexZ, float maxDistanceZ)
+    public TileData GenerateTile(float centerVertexZ, float maxDistanceZ)
     {
         // calculate tile depth and width based on the mesh vertices
         Vector3[] meshVertices = this.meshFilter.mesh.vertices;
@@ -98,15 +98,15 @@ public class TileGenerator : MonoBehaviour
         float offsetX = -this.gameObject.transform.position.x;
         float offsetZ = -this.gameObject.transform.position.z;
         // generate a heightMap using Perlin Noise
-        float[,] heightMap = this.noiseMapGenerator.GeneratePerlinNoiseMap(tileDepth, tileWidth, this.levelScale, offsetX, offsetZ, this.heightWaves);
+        float[,] heightMap = this.noiseMapGeneration.GeneratePerlinNoiseMap(tileDepth, tileWidth, this.levelScale, offsetX, offsetZ, this.heightWaves);
         // calculate vertex offset based on the Tile position and the distance between vertices
         Vector3 tileDimensions = this.meshFilter.mesh.bounds.size;
         float distanceBetweenVertices = tileDimensions.z / (float)tileDepth;
         float vertexOffsetZ = this.gameObject.transform.position.z / distanceBetweenVertices;
         // generate a heatMap using uniform noise
-        float[,] uniformHeatMap = this.noiseMapGenerator.GenerateUniformNoiseMap(tileDepth, tileWidth, centerVertexZ, maxDistanceZ, vertexOffsetZ);
+        float[,] uniformHeatMap = this.noiseMapGeneration.GenerateUniformNoiseMap(tileDepth, tileWidth, centerVertexZ, maxDistanceZ, vertexOffsetZ);
         // generate a heatMap using Perlin Noise
-        float[,] randomHeatMap = this.noiseMapGenerator.GeneratePerlinNoiseMap(tileDepth, tileWidth, this.levelScale, offsetX, offsetZ, this.heatWaves);
+        float[,] randomHeatMap = this.noiseMapGeneration.GeneratePerlinNoiseMap(tileDepth, tileWidth, this.levelScale, offsetX, offsetZ, this.heatWaves);
         float[,] heatMap = new float[tileDepth, tileWidth];
         for (int zIndex = 0; zIndex < tileDepth; zIndex++)
         {
@@ -119,7 +119,7 @@ public class TileGenerator : MonoBehaviour
             }
         }
         // generate a moistureMap using Perlin Noise
-        float[,] moistureMap = this.noiseMapGenerator.GeneratePerlinNoiseMap(tileDepth, tileWidth, this.levelScale, offsetX, offsetZ, this.moistureWaves);
+        float[,] moistureMap = this.noiseMapGeneration.GeneratePerlinNoiseMap(tileDepth, tileWidth, this.levelScale, offsetX, offsetZ, this.moistureWaves);
         for (int zIndex = 0; zIndex < tileDepth; zIndex++)
         {
             for (int xIndex = 0; xIndex < tileWidth; xIndex++)
@@ -138,7 +138,8 @@ public class TileGenerator : MonoBehaviour
         TerrainType[,] chosenMoistureTerrainTypes = new TerrainType[tileDepth, tileWidth];
         Texture2D moistureTexture = BuildTexture(moistureMap, this.moistureTerrainTypes, chosenMoistureTerrainTypes);
         // build a biomes Texture2D from the three other noise variables
-        Texture2D biomeTexture = BuildBiomeTexture(chosenHeightTerrainTypes, chosenHeatTerrainTypes, chosenMoistureTerrainTypes);
+        Biome[,] chosenBiomes = new Biome[tileDepth, tileWidth];
+        Texture2D biomeTexture = BuildBiomeTexture(chosenHeightTerrainTypes, chosenHeatTerrainTypes, chosenMoistureTerrainTypes, chosenBiomes);
         switch (this.visualizationMode)
         {
             case VisualizationMode.Height:
@@ -160,6 +161,18 @@ public class TileGenerator : MonoBehaviour
         }
         // update the tile mesh vertices according to the height map
         UpdateMeshVertices(heightMap);
+        TileData tileData = new(
+            heightMap, 
+            heatMap, 
+            moistureMap,
+            chosenHeightTerrainTypes,
+            chosenHeatTerrainTypes, 
+            chosenMoistureTerrainTypes, 
+            chosenBiomes, 
+            this.meshFilter.mesh, 
+            biomeTexture
+            );
+        return tileData;
     }
 
     private Texture2D BuildTexture(float[,] heightMap, TerrainType[] terrainTypes, TerrainType[,] chosenTerrainTypes)
@@ -190,7 +203,12 @@ public class TileGenerator : MonoBehaviour
         return tileTexture;
     }
 
-    private Texture2D BuildBiomeTexture(TerrainType[,] heightTerrainTypes, TerrainType[,] heatTerrainTypes, TerrainType[,] moistureTerrainTypes)
+    private Texture2D BuildBiomeTexture(
+        TerrainType[,] heightTerrainTypes,
+        TerrainType[,] heatTerrainTypes,
+        TerrainType[,] moistureTerrainTypes,
+        Biome[,] chosenBiomes
+        )
     {
         int tileDepth = heatTerrainTypes.GetLength(0);
         int tileWidth = heatTerrainTypes.GetLength(1);
@@ -211,6 +229,8 @@ public class TileGenerator : MonoBehaviour
                     Biome biome = this.biomes[moistureTerrainType.index].biomes[heatTerrainType.index];
                     // assign the color according to the selected biome
                     colorMap[colorIndex] = biome.color;
+                    // save biome in chosenBiomes matrix only when it is not water
+                    chosenBiomes[zIndex, xIndex] = biome;
                 }
                 else
                 {
@@ -221,7 +241,6 @@ public class TileGenerator : MonoBehaviour
         }
         // create a new texture and set its pixel colors
         Texture2D tileTexture = new Texture2D(tileWidth, tileDepth);
-        tileTexture.filterMode = FilterMode.Point;
         tileTexture.wrapMode = TextureWrapMode.Clamp;
         tileTexture.SetPixels(colorMap);
         tileTexture.Apply();

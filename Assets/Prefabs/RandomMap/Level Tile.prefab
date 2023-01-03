@@ -179,7 +179,7 @@ MonoBehaviour:
     height: 0.75
     color: {r: 0.55998576, g: 0.9092011, b: 0.9811321, a: 0}
     index: 3
-  noiseMapGenerator: {fileID: 4118544239950731595}
+  noiseMapGeneration: {fileID: 4118544239950731595}
   tileRenderer: {fileID: 4118544239950731598}
   meshFilter: {fileID: 4118544239950731597}
   meshCollider: {fileID: 4118544239950731599}

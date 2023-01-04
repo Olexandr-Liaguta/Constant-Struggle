@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+
 [CustomEditor(typeof(MapGenerator))]
 [CanEditMultipleObjects]
 public class MapGeneratorEditor : Editor
@@ -15,13 +16,13 @@ public class MapGeneratorEditor : Editor
         {
             if(mapGen.autoUpdate)
             {
-                mapGen.GenerateMap();
+                mapGen.DrawMapInEditor();
             }
         }
 
         if(GUILayout.Button("Generate"))
         {
-            mapGen.GenerateMap();
+            mapGen.DrawMapInEditor();
         }
     }
 }

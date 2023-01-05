@@ -11,6 +11,8 @@ public class MapGenerator : MonoBehaviour
     public enum DrawMode { NoiseMap, ColourMap, Mesh }
     public DrawMode drawMode = DrawMode.NoiseMap;
 
+    public Noise.NormalizeMode normalizeMode;
+
     public const int mapChunkSize = 241;
     [Range(0, 6)]
     public int editorPreviewLOD;
@@ -149,7 +151,8 @@ public class MapGenerator : MonoBehaviour
             persistance: persistance,
             lacunarity: lacunarity,
             seed: seed,
-            offset: centre + offset
+            offset: centre + offset,
+            normalizeMode: normalizeMode
             );
 
         Color[] colourMap = GenerateColourMap(noiseMap);

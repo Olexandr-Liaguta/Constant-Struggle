@@ -328,6 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a7f5a1e3ac63d5418746fec82eabc42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHome: 0
-  status: 0
+  row: 0
+  column: 0
   button: {fileID: 4170534908765440285}
+  gameController: {fileID: 11400000, guid: c5924118b3d22a74287f630ac6fe0005, type: 2}

@@ -62,6 +62,8 @@ public class PickUpUI : MonoBehaviour
 
     void ClosePickUpItems()
     {
+        if (GameManager.instance == null) return;
+
         GameManager.instance.UnstackCameraAndHideCursor();
 
         pickUpCanvas.SetActive(false);

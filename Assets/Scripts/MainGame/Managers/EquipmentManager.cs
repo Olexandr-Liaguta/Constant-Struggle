@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,7 @@ public class EquipmentManager : MonoBehaviour
 {
     #region Singelton
 
-    public static EquipmentManager instance;
+    public static EquipmentManager instance { get; private set; }
 
     void Awake()
     {
@@ -17,12 +18,20 @@ public class EquipmentManager : MonoBehaviour
 
     #endregion
 
+    public event EventHandler<OnEquipmentChangedArgs> OnEquipmentChanged;
+    public class OnEquipmentChangedArgs : EventArgs
+    {
+        public EquipmentSlotExact slot;
+        public InventoryItem newItem;
+        public InventoryItem oldItem;
+    }
 
-    [SerializeField] private Equipment[] defaultEquipments;
+
 
     [SerializeField] Equipment headDefaultEquipment, legsDefaultEquipment, chestDefaultEquipment;
+    public SkinnedMeshRenderer targetMesh;
 
-    Dictionary<EquipmentSlotExact, InventoryItem> _defaultEquipment = new() {
+    Dictionary<EquipmentSlotExact, InventoryItem> defaultEquipment = new() {
         {EquipmentSlotExact.Ring_1, null },
         {EquipmentSlotExact.Hand_1, null },
         {EquipmentSlotExact.Head, null },
@@ -35,9 +44,7 @@ public class EquipmentManager : MonoBehaviour
         {EquipmentSlotExact.Feet, null },
     };
 
-    public SkinnedMeshRenderer targetMesh;
-
-    Dictionary<EquipmentSlotExact, InventoryItem> _currentEquipment = new() {
+    Dictionary<EquipmentSlotExact, InventoryItem> currentEquipment = new() {
         {EquipmentSlotExact.Ring_1, null },
         {EquipmentSlotExact.Hand_1, null },
         {EquipmentSlotExact.Head, null },
@@ -63,25 +70,21 @@ public class EquipmentManager : MonoBehaviour
         {EquipmentSlotExact.Feet, null },
     };
 
-    public delegate void OnEquipmentChanged(EquipmentSlotExact slot, InventoryItem newItem, InventoryItem oldItem);
-    public OnEquipmentChanged onEquipmentChanged;
 
-    Inventory inventory;
+
 
     private void Start()
     {
-        inventory = Inventory.instance;
-
-        _defaultEquipment[EquipmentSlotExact.Head] = new InventoryItem(headDefaultEquipment);
-        _defaultEquipment[EquipmentSlotExact.Chest] = new InventoryItem(chestDefaultEquipment);
-        _defaultEquipment[EquipmentSlotExact.Legs] = new InventoryItem(legsDefaultEquipment);
+        defaultEquipment[EquipmentSlotExact.Head] = new InventoryItem(headDefaultEquipment);
+        defaultEquipment[EquipmentSlotExact.Chest] = new InventoryItem(chestDefaultEquipment);
+        defaultEquipment[EquipmentSlotExact.Legs] = new InventoryItem(legsDefaultEquipment);
 
         _EquipDefaultItems();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.U)) UnequipAll();
+        // if (Input.GetKeyDown(KeyCode.U)) UnequipAll();
     }
 
     EquipmentSlotExact _HandleEquipmentSlot(EquipmentSlot equipmentSlot)
@@ -103,7 +106,7 @@ public class EquipmentManager : MonoBehaviour
 
     EquipmentSlotExact _GetAvailableHandEquipment()
     {
-        if (_currentEquipment[EquipmentSlotExact.Hand_1] == null)
+        if (currentEquipment[EquipmentSlotExact.Hand_1] == null)
         {
             return EquipmentSlotExact.Hand_1;
         }
@@ -113,7 +116,7 @@ public class EquipmentManager : MonoBehaviour
 
     EquipmentSlotExact _GetAvailableRingEquipment()
     {
-        if (_currentEquipment[EquipmentSlotExact.Ring_1] == null)
+        if (currentEquipment[EquipmentSlotExact.Ring_1] == null)
         {
             return EquipmentSlotExact.Ring_1;
         }
@@ -138,12 +141,14 @@ public class EquipmentManager : MonoBehaviour
         {
             InventoryItem oldInventoryItem = Unequip(equipmentSlot);
 
-            _currentEquipment[equipmentSlot] = newInventoryItem;
+            currentEquipment[equipmentSlot] = newInventoryItem;
 
-            if (onEquipmentChanged != null)
+            OnEquipmentChanged?.Invoke(this, new OnEquipmentChangedArgs
             {
-                onEquipmentChanged.Invoke(equipmentSlot, newInventoryItem, null);
-            }
+                slot = equipmentSlot,
+                newItem = newInventoryItem,
+                oldItem = null,
+            });
 
         }
     }
@@ -160,7 +165,7 @@ public class EquipmentManager : MonoBehaviour
 
     public InventoryItem Unequip(EquipmentSlotExact equipmentSlot)
     {
-        InventoryItem oldItem = _currentEquipment[equipmentSlot];
+        InventoryItem oldItem = currentEquipment[equipmentSlot];
 
         if (oldItem == null) return null;
 
@@ -169,20 +174,22 @@ public class EquipmentManager : MonoBehaviour
             Destroy(currentMeshes[equipmentSlot].gameObject);
         }
 
-        inventory.Add(oldItem);
+        PlayerInventoryManager.instance.Add(oldItem);
 
         _SetEquipmentBlendShapes(oldItem.item as Equipment, 0);
 
-        _currentEquipment[equipmentSlot] = null;
+        currentEquipment[equipmentSlot] = null;
 
-        if (onEquipmentChanged != null)
+        OnEquipmentChanged?.Invoke(this, new OnEquipmentChangedArgs
         {
-            onEquipmentChanged.Invoke(equipmentSlot, null, oldItem);
-        }
+            slot = equipmentSlot,
+            newItem = null,
+            oldItem = oldItem,
+        });
 
-        var defaultEquipment = _defaultEquipment[equipmentSlot];
+        var defaultEquipment = this.defaultEquipment[equipmentSlot];
 
-        if(defaultEquipment != null)
+        if (defaultEquipment != null)
         {
             Equip(defaultEquipment);
         }
@@ -200,7 +207,7 @@ public class EquipmentManager : MonoBehaviour
 
     public void UnequipAll()
     {
-        foreach (var inventoryItem in _currentEquipment)
+        foreach (var inventoryItem in currentEquipment)
         {
             Unequip(inventoryItem.Key);
         }
@@ -209,7 +216,7 @@ public class EquipmentManager : MonoBehaviour
 
     void _EquipDefaultItems()
     {
-        foreach (InventoryItem item in _defaultEquipment.Values)
+        foreach (InventoryItem item in defaultEquipment.Values)
         {
             if (item != null)
             {
@@ -218,9 +225,9 @@ public class EquipmentManager : MonoBehaviour
         }
     }
 
-    public EquipmentSlotExact? IsEquiped(InventoryItem inventoryItem)
+    public EquipmentSlotExact? GetEquipmentSlot(InventoryItem inventoryItem)
     {
-        foreach (var equipment in _currentEquipment)
+        foreach (var equipment in currentEquipment)
         {
             if (equipment.Value?.id == inventoryItem.id)
             {

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6055e445c0af459408cf23b308383b5a, type: 3}
-  m_Name: GameController
+  m_Name: GameState
   m_EditorClassIdentifier: 
   locationRows:
   - columns:

@@ -6,12 +6,7 @@ public class InventoryWeightUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI currentWeight, maxWeight;
     [SerializeField] PlayerStats playerStats;
 
-    Inventory inventory;
-
-    private void Start()
-    {
-        inventory = Inventory.instance;
-    }
+    [SerializeField] private InventorySO inventory;
 
     public void UpdateWeightValues()
     {

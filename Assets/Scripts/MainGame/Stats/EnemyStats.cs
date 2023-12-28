@@ -5,18 +5,17 @@ using UnityEngine;
 
 public class EnemyStats : CharacterStats
 {
-    [SerializeField]
-    GameObject pickUpGO;
+    [SerializeField] private GameObject pickUpGO;
 
     public int score = 25;
-
     public string enemyName = "Enemy";
 
-    public override void Die()
+    protected override void Die()
     {
         base.Die();
 
-        PickUpManager.instance.DropPickup(gameObject, score);
+        PickUpManager.Instance.DropPickup(gameObject, score);
+        SceneProgressManager.instance.HandleEnemyDies(gameObject);
 
         Destroy(gameObject);
     }

@@ -9,16 +9,21 @@ public class PickUpUI : MonoBehaviour
 
     List<GameObject> createdPickUpItems = new();
 
-    public void ShowPickUpItems(List<InventoryItem> items)
+    private void Start()
+    {
+        PickUpManager.Instance.OnShowPickUp += ShowPickUpItems;
+    }
+
+    public void ShowPickUpItems(object sender, PickUpManager.OnShowPickUpArgs args)
     {
         GameManager.instance.StackCameraAndShowCursor();
 
-        InstantiadePickUpItems(items);
+        InstantiatePickUpItems(args.items);
 
         pickUpCanvas.SetActive(true);
     }
 
-    private void InstantiadePickUpItems(List<InventoryItem> items)
+    private void InstantiatePickUpItems(List<InventoryItem> items)
     {
         foreach (InventoryItem item in items)
         {
@@ -34,14 +39,15 @@ public class PickUpUI : MonoBehaviour
 
     public void PickUpItem(InventoryItem itemToPickUp, GameObject itemGO)
     {
-        bool wasPickedUp = PickUpManager.instance.PickUpItem(itemToPickUp);
+        bool wasPickedUp = PickUpManager.Instance.PickUpItem(itemToPickUp);
 
-        if (wasPickedUp) { 
+        if (wasPickedUp)
+        {
             createdPickUpItems.Remove(itemGO);
             Destroy(itemGO);
         }
 
-        if(createdPickUpItems.Count == 0)
+        if (createdPickUpItems.Count == 0)
         {
             ClosePickUpItems();
         }
@@ -54,7 +60,7 @@ public class PickUpUI : MonoBehaviour
             ClosePickUpItems();
         }
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             PickUpAllItems();
         }
@@ -77,7 +83,13 @@ public class PickUpUI : MonoBehaviour
         {
             var pickUpItemUI = createdPickUpItem.GetComponent<PickUpItemUI>();
 
-            PickUpManager.instance.PickUpItem(pickUpItemUI.pickUpItem);
+            bool wasPickedUp = PickUpManager.Instance.PickUpItem(pickUpItemUI.pickUpItem);
+
+            if (!wasPickedUp)
+            {
+                // TODO: Notification that can`t pick up items
+                return;
+            }
         }
 
         ClosePickUpItems();

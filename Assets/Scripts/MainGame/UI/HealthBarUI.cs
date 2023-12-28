@@ -12,12 +12,17 @@ public class HealthBarUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI healthText;
 
-    public void UpdateHealth(float current, float max)
+    private void Start()
     {
-        float healthPercent = current / max;
+        PlayerStats.Instance.OnHealthChange += UpdateHealth;
+    }
+
+    public void UpdateHealth(object sender, PlayerStats.OnHealthChangeArgs e)
+    {
+        float healthPercent = e.health / e.maxHealth;
 
         healthImage.fillAmount = healthPercent;
 
-        healthText.text = (int)current + " / " + (int)max;
+        healthText.text = (int)e.health + " / " + (int)e.maxHealth;
     }
 }

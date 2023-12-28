@@ -6,14 +6,12 @@ public class InventoryEquipmentUI : MonoBehaviour
 {
     public Transform equipmentsParent;
 
-    EquipmentManager equipmentManager;
     Dictionary<EquipmentSlotExact, InventoryEquipmentSlotUI> equipmentSlots = new();
 
 
     void Start()
     {
-        equipmentManager = EquipmentManager.instance;
-        equipmentManager.onEquipmentChanged += UpdateEquipmentUI;
+        EquipmentManager.instance.OnEquipmentChanged += UpdateEquipmentUI;
 
 
         var equipmentSlotsInChildrens = equipmentsParent.GetComponentsInChildren<InventoryEquipmentSlotUI>();
@@ -25,11 +23,11 @@ public class InventoryEquipmentUI : MonoBehaviour
     }
 
 
-    void UpdateEquipmentUI(EquipmentSlotExact slot, InventoryItem newInventoryItem, InventoryItem oldInventoryItem)
+    void UpdateEquipmentUI(object sender, EquipmentManager.OnEquipmentChangedArgs args)
     {
-        if (newInventoryItem == null)
+        if (args.newItem == null)
         {
-            equipmentSlots.TryGetValue(slot, out InventoryEquipmentSlotUI equipment);
+            equipmentSlots.TryGetValue(args.slot, out InventoryEquipmentSlotUI equipment);
 
             if (equipment == null || equipment.slot == null)
             {
@@ -40,9 +38,9 @@ public class InventoryEquipmentUI : MonoBehaviour
         }
         else
         {
-            Equipment newItem = newInventoryItem.item as Equipment;
+            Equipment newItem = args.newItem.item as Equipment;
 
-            equipmentSlots.TryGetValue(slot, out InventoryEquipmentSlotUI equipment);
+            equipmentSlots.TryGetValue(args.slot, out InventoryEquipmentSlotUI equipment);
 
             if (equipment == null || equipment.slot == null)
             {
@@ -55,7 +53,7 @@ public class InventoryEquipmentUI : MonoBehaviour
             }
             else
             {
-                equipment.slot.AddItem(newInventoryItem);
+                equipment.slot.AddItem(args.newItem);
             }
         }
     }

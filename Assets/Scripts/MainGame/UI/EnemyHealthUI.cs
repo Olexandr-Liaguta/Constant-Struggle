@@ -3,28 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class EnemyHealthUI : MonoBehaviour
 {
-    [SerializeField]
-    GameObject mainComponent;
-
-    [SerializeField]
-    TextMeshProUGUI textComponent;
-
-    [SerializeField]
-    Image healthComponent;
+    [SerializeField] private GameObject mainComponent;
+    [SerializeField] private TextMeshProUGUI textComponent;
+    [SerializeField] private Image healthComponent;
 
     private void Start()
     {
+        PlayerCombat.Instance.OnFocusEnemy += Show;
+        PlayerCombat.Instance.OnUnfocusEnemy += Hide;
+
         mainComponent.SetActive(false);
     }
 
-    public void Show(EnemyStats enemyStats)
+    public void Show(object sender, PlayerCombat.OnFocusEnemyArgs args)
     {
-        textComponent.text = enemyStats.enemyName;
+        textComponent.text = args.enemyStats.enemyName;
 
-        UpdateHealth(enemyStats);
+        UpdateHealth(args.enemyStats);
 
         mainComponent.SetActive(true);
     }
@@ -34,7 +33,7 @@ public class EnemyHealthUI : MonoBehaviour
         healthComponent.fillAmount = enemyStats.health.GetAmount01();
     }
 
-    public void Hide()
+    public void Hide(object sender, EventArgs args)
     {
         mainComponent.SetActive(false);
     }

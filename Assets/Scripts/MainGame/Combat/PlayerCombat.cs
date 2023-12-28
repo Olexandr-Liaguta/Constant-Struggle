@@ -1,32 +1,42 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
 {
+    public static PlayerCombat Instance { get; private set; }
+
+    public event EventHandler<OnFocusEnemyArgs> OnFocusEnemy;
+    public class OnFocusEnemyArgs : EventArgs
+    {
+        public EnemyStats enemyStats;
+    }
+
+    public event EventHandler OnUnfocusEnemy;
+
+
     public float attackRadius = 3f;
     public LayerMask attackMask;
 
-    CharacterCombat playerCombat;
+    [SerializeField] private GameObject focusAttackPrefab;
 
-    EnemyStats enemyStats;
+    private CharacterCombat playerCombat;
+    private EnemyStats enemyStats;
+    private int? enemyInstanceId = null;
+    private GameObject instantiatedFocusAttackPrefab;
 
-    int? enemyInstanceId = null;
 
-    [SerializeField]
-    GameObject focusAttackPrefab;
-    GameObject instantiatedFocusAttackPrefab;
+    private void Awake()
+    {
+        Instance = this;
+    }
 
-    [SerializeField]
-    EnemyHealthUI enemyHealthUI;
-
-    // Start is called before the first frame update
     void Start()
     {
         playerCombat = GetComponent<CharacterCombat>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButton(0))
@@ -92,7 +102,7 @@ public class PlayerCombat : MonoBehaviour
 
     void ShowEnemyHealth()
     {
-        enemyHealthUI.Show(enemyStats);
+        OnFocusEnemy?.Invoke(this, new OnFocusEnemyArgs { enemyStats = enemyStats });
     }
 
     private void FaceTarget(Collider collider)
@@ -108,7 +118,8 @@ public class PlayerCombat : MonoBehaviour
         {
             Destroy(instantiatedFocusAttackPrefab);
         }
-        enemyHealthUI.Hide();
+
+        OnUnfocusEnemy?.Invoke(this, EventArgs.Empty);
     }
 
 

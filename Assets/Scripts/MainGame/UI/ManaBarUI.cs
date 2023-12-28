@@ -6,18 +6,22 @@ using TMPro;
 
 public class ManaBarUI : MonoBehaviour
 {
-    [SerializeField]
-    private Image manaImage;
+    [SerializeField] private Image manaImage;
 
-    [SerializeField]
-    private TextMeshProUGUI manaText;
+    [SerializeField] private TextMeshProUGUI manaText;
 
-    public void UpdateMana(float current, float max)
+
+    private void Start()
     {
-        float manaPercent = current / max;
+        PlayerStats.Instance.OnManaChange += UpdateMana;
+    }
+
+    public void UpdateMana(object sender, PlayerStats.OnManaChangeArgs args)
+    {
+        float manaPercent = args.mana / args.maxMana;
 
         manaImage.fillAmount = manaPercent;
 
-        manaText.text = (int)current + " / " + (int)max;
+        manaText.text = (int)args.mana + " / " + (int)args.maxMana;
     }
 }

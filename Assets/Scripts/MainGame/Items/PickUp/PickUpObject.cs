@@ -8,12 +8,12 @@ public class PickUpObject : Interactable
     {
         base.Interact();
 
-        PickUpManager.instance.ShowPickUp(this);
+        PickUpManager.Instance.ShowPickUp(this);
     }
 
     public bool PickUpItem(InventoryItem item)
     {
-        bool wasPickedUp = Inventory.instance.Add(item);
+        bool wasPickedUp = PlayerInventoryManager.instance.Add(item);
 
         if (wasPickedUp)
         {

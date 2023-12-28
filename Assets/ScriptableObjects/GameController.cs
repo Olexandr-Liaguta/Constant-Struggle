@@ -20,7 +20,7 @@ public class LocationCell
     public int score;
 }
 
-[CreateAssetMenu(fileName = "GameController", menuName = "GameController")]
+[CreateAssetMenu(fileName = "GameController", menuName = "States/GameController")]
 public class GameController : ScriptableObject
 {
 

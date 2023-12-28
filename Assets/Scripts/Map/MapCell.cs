@@ -70,7 +70,7 @@ public class MapCell : MonoBehaviour
 
         if (currentLocation.isHome) return;
 
-        SceneManager.LoadScene("Main");
+        Loader.LoadScene(Loader.Scene.Game);
 
         // For Test Change Button color
         /*       

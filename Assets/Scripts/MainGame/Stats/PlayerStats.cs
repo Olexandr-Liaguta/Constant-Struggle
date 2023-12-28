@@ -1,42 +1,59 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class PlayerStats : CharacterStats
 {
-    [SerializeField]
-    HealthBarUI healthBarUI;
+    public static PlayerStats Instance { get; private set; }
 
-    [SerializeField]
-    ManaBarUI manaBarUI;
 
-    [SerializeField]
-    InventoryStatsManagerUI inventoryStatsManager;
 
-    void Start()
+    public event EventHandler<OnHealthChangeArgs> OnHealthChange;
+    public class OnHealthChangeArgs: EventArgs
     {
-        EquipmentManager.instance.onEquipmentChanged += OnEquipmentChange;
-
-        inventoryStatsManager.UpdateStats(this);
+        public float health;
+        public float maxHealth;
     }
 
-    void OnEquipmentChange(EquipmentSlotExact slot, InventoryItem newItem, InventoryItem oldItem)
+    public event EventHandler<OnManaChangeArgs> OnManaChange;
+    public class OnManaChangeArgs : EventArgs
     {
-        if (oldItem != null)
+        public float mana;
+        public float maxMana;
+    }
+
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    new void Start()
+    {
+        base.Start();
+
+        EquipmentManager.instance.OnEquipmentChanged += ChangeEquipment;
+
+        OnHealthChange?.Invoke(this, new OnHealthChangeArgs { health = health.currentValue, maxHealth = GetMaxHealth() });
+        OnManaChange?.Invoke(this, new OnManaChangeArgs { mana = mana.currentValue, maxMana = mana.GetMaxValue() });
+    }
+
+    void ChangeEquipment(object sender, EquipmentManager.OnEquipmentChangedArgs args)
+    {
+        if (args.oldItem != null)
         {
-            _RemoveModifiers(oldItem);
+            _RemoveModifiers(args.oldItem);
         }
 
-        if (newItem != null)
+        if (args.newItem != null)
         {
-            _AddModifiers(newItem);
+            _AddModifiers(args.newItem);
         }
 
         _UpdatePointStats();
-        inventoryStatsManager.UpdateStats(this);
 
-        OnChangeHealth();
-        OnChangeMana();
+        HealthChanged();
+        ManaChanged();
     }
 
     private void _AddModifiers(InventoryItem inventoryItem)
@@ -182,21 +199,17 @@ public class PlayerStats : CharacterStats
         health.SetStatModifier(strength.GetValue());
     }
 
-    public override void OnChangeHealth()
+    protected override void HealthChanged()
     {
-        base.OnChangeHealth();
-
-        healthBarUI.UpdateHealth(current: health.currentValue, max: GetMaxHealth());
+        OnHealthChange?.Invoke(this, new OnHealthChangeArgs { health = health.currentValue, maxHealth = GetMaxHealth() });
     }
 
-    public override void OnChangeMana()
+    protected override void ManaChanged()
     {
-        base.OnChangeMana();
-
-        manaBarUI.UpdateMana(current: mana.currentValue, max: mana.GetMaxValue());
+        OnManaChange?.Invoke(this, new OnManaChangeArgs { mana = mana.currentValue, maxMana = mana.GetMaxValue()  });
     }
 
-    public override void Die()
+    protected override void Die()
     {
         base.Die();
 

@@ -11,6 +11,7 @@ public enum ItemRarity
     Set
 }
 
+[Serializable]
 public class InventoryItem
 {
     public readonly Item item;
@@ -20,18 +21,17 @@ public class InventoryItem
     public ItemRarity rarity;
     public Dictionary<Modifier, ModifierValue> addModifiers = new();
 
-    public InventoryItem(Item _item)
+    public InventoryItem(Item item)
     {
-        item = _item;
+        this.item = item;
         id = Guid.NewGuid();
-
     }
 
     public void Use()
     {
         if (item is Equipment)
         {
-            EquipmentSlotExact? equipmentSlotExact = EquipmentManager.instance.IsEquiped(this);
+            EquipmentSlotExact? equipmentSlotExact = EquipmentManager.instance.GetEquipmentSlot(this);
 
             if (equipmentSlotExact == null)
             {
@@ -47,6 +47,6 @@ public class InventoryItem
 
     void RemoveFromInventory()
     {
-        Inventory.instance.Remove(this);
+        PlayerInventoryManager.instance.Remove(this);
     }
 }

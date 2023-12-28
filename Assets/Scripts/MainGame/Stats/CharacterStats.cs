@@ -33,7 +33,7 @@ public class CharacterStats : MonoBehaviour
     public Stat manaRegeneration;
 
 
-    public void Awake()
+    public void Start()
     {
         health.SetStatModifier(strength.GetValue());
         health.Initialize();
@@ -41,8 +41,8 @@ public class CharacterStats : MonoBehaviour
         mana.SetStatModifier(spirit.GetValue());
         mana.Initialize();
 
-        OnChangeHealth();
-        OnChangeMana();
+        HealthChanged();
+        ManaChanged();
     }
 
     private void Update()
@@ -55,7 +55,7 @@ public class CharacterStats : MonoBehaviour
         health.Increase(Time.deltaTime * healthRegenerationSpeed * (float)healthRegeneration.GetValue());
         mana.Increase(Time.deltaTime * manaRegenerationSpeed * (float)manaRegeneration.GetValue());
 
-        OnChangeHealth();
+        HealthChanged();
     }
 
     public float GetMaxHealth()
@@ -95,7 +95,7 @@ public class CharacterStats : MonoBehaviour
 
         health.Decrease(damage);
 
-        OnChangeHealth();
+        HealthChanged();
 
         _HandlePlayerNotify(damage: damage, isMiss: false, isCritical: isCritical);
 
@@ -167,11 +167,11 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    public virtual void OnChangeHealth() { }
+    protected virtual void HealthChanged() { }
 
-    public virtual void OnChangeMana() { }
+    protected virtual void ManaChanged() { }
 
-    public virtual void Die()
+    protected virtual void Die()
     {
         Debug.Log(transform.name + " died.");
     }

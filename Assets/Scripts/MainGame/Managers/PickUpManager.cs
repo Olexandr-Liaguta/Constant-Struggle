@@ -1,44 +1,39 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PickUpManager : MonoBehaviour
 {
+    static public PickUpManager Instance { get; private set; }
 
-    #region Singelton
+    public event EventHandler<OnShowPickUpArgs> OnShowPickUp;
+    public class OnShowPickUpArgs: EventArgs
+    {
+        public List<InventoryItem> items;
+    }
 
-    static public PickUpManager instance;
 
+    [SerializeField] private GameObject pickUpGO;
+
+
+    private PickUpObject pickUpObject;
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
+      Instance = this;
     }
-
-    #endregion
-
-    [SerializeField]
-    PickUpUI pickUpUI;
-
-    [SerializeField]
-    GameObject pickUpGO;
-
-    PickUpObject _pickUpObject;
-
 
     public void ShowPickUp(PickUpObject pickUpObject)
     {
-        _pickUpObject = pickUpObject;
+        this.pickUpObject = pickUpObject;
 
-        pickUpUI.ShowPickUpItems(_pickUpObject.items);
+        OnShowPickUp?.Invoke(this, new OnShowPickUpArgs { items = pickUpObject.items });
     }
 
     public bool PickUpItem(InventoryItem item)
     {
-        return _pickUpObject.PickUpItem(item);
+        return pickUpObject.PickUpItem(item);
     }
 
     public void DropPickup(GameObject gameObject, int score)

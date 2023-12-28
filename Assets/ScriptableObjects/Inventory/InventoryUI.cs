@@ -8,9 +8,10 @@ public class InventoryUI : MonoBehaviour
     public Transform itemsParent;
     public GameObject inventoryUI_GO;
 
-    Inventory inventory;
-    [SerializeField] GameObject inventorySlotUIPrefab;
+    [SerializeField] private GameObject inventorySlotUIPrefab;
+
     readonly Dictionary<Guid, GameObject> instantiatedItemSlots = new();
+
     InventorySlotUI[] itemSlots;
     Guid selectedInventoryId;
 
@@ -21,8 +22,7 @@ public class InventoryUI : MonoBehaviour
 
     void Start()
     {
-        inventory = Inventory.instance;
-        inventory.onItemsChangedCallback += UpdateUI;
+        PlayerInventoryManager.instance.onItemsChangedCallback += UpdateUI;
 
         inventoryWeightUI = GetComponent<InventoryWeightUI>();
 
@@ -31,6 +31,7 @@ public class InventoryUI : MonoBehaviour
         UpdateUI();
 
         Cursor.visible = false;
+        inventoryUI_GO.SetActive(false);
     }
 
     // Update is called once per frame
@@ -69,7 +70,7 @@ public class InventoryUI : MonoBehaviour
     {
         var itemGOs = new Dictionary<Guid, GameObject>(instantiatedItemSlots);
 
-        foreach (InventoryItem inventorySlot in inventory.items)
+        foreach (InventoryItem inventorySlot in PlayerInventoryManager.instance.GetInventoryItems())
         {
             itemGOs.TryGetValue(inventorySlot.id, out GameObject GO);
 
@@ -112,9 +113,11 @@ public class InventoryUI : MonoBehaviour
 
     void UpdateResourcesUI()
     {
+        var resources = PlayerInventoryManager.instance.GetResourses();
+
         for (int i = 0; i < resourceSlots.Length; i++)
         {
-            int resourceValue = inventory.resources[resourceSlots[i].type];
+            int resourceValue = resources[resourceSlots[i].type];
             resourceSlots[i].SetResourceValue(resourceValue);
         }
     }

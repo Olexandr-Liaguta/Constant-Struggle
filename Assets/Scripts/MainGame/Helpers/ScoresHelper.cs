@@ -21,19 +21,19 @@ public abstract class ScoresHelper
         { ResourceType.Wood, 1 },
     };
 
-    static public readonly Dictionary<Modifier, int> modifierScore = new()
+    static public readonly Dictionary<Attribute, int> modifierScore = new()
     {
-        { Modifier.Armor, 1 },
-        { Modifier.AttackSpeed, 6 },
-        { Modifier.Health, 1 },
-        { Modifier.Mana, 1 },
-        { Modifier.Damage, 2 },
-        { Modifier.Accuracy, 3 },
-        { Modifier.Agility, 3 },
-        { Modifier.Spirit, 3 },
-        { Modifier.Strength, 3 },
-        { Modifier.HealthRegeneration, 6 },
-        { Modifier.ManaRegeneration, 3 },
+        { Attribute.Armor, 1 },
+        { Attribute.AttackSpeed, 6 },
+        { Attribute.Health, 1 },
+        { Attribute.Mana, 1 },
+        { Attribute.Damage, 2 },
+        { Attribute.Accuracy, 3 },
+        { Attribute.Agility, 3 },
+        { Attribute.Spirit, 3 },
+        { Attribute.Strength, 3 },
+        { Attribute.HealthRegeneration, 6 },
+        { Attribute.ManaRegeneration, 3 },
     };
 
 }

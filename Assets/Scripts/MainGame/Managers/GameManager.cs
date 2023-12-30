@@ -5,18 +5,26 @@ using Cinemachine;
 
 public class GameManager : MonoBehaviour
 {
-    static public GameManager instance;
+    static public GameManager Instance { get; private set; }
+
+
+    [SerializeField] private CinemachineFreeLook camera;
+
+    private bool isFirstUpdate = true;
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
+        Instance = this;
     }
 
-    [SerializeField]
-    private CinemachineFreeLook camera;
+    private void Update()
+    {
+        if (isFirstUpdate)
+        {
+            isFirstUpdate = false;
+            SaveManager.Instance.Load();
+        }
+    }
 
 
     public void StackCameraAndShowCursor()
@@ -24,7 +32,7 @@ public class GameManager : MonoBehaviour
         camera.enabled = false;
         Cursor.visible = true;
     }
-    
+
     public void UnstackCameraAndHideCursor()
     {
         camera.enabled = true;

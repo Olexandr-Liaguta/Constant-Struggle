@@ -32,4 +32,9 @@ public class Stat
         if (modifier != 0) modifiers.Remove(modifier);
     }
 
+    public void RemoveAllModifiers()
+    {
+        modifiers.Clear();
+    }
+
 }

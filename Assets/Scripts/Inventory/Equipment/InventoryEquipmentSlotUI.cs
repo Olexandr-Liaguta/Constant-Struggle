@@ -4,12 +4,11 @@ public class InventoryEquipmentSlotUI : MonoBehaviour
 {
     public EquipmentSlotExact equipmentSlot;
 
-    [HideInInspector]
-    public InventorySlotUI slot;
+    [HideInInspector] public InventorySlotUI inventorySlotUI;
 
     private void Start()
     {
-        slot = GetComponentInChildren<InventorySlotUI>();
+        inventorySlotUI = GetComponentInChildren<InventorySlotUI>();
     }
 
 }

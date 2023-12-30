@@ -28,18 +28,19 @@ public class CharacterStats : MonoBehaviour
 
     float healthRegenerationSpeed = 1f;
     public Stat healthRegeneration;
-    
+
     float manaRegenerationSpeed = 3f;
     public Stat manaRegeneration;
 
+    private const int STRENGTH_ADD_HEALTH_MULTIPLIER = 50;
+    private const int SPIRIT_ADD_MANA_MULTIPLIER = 50;
 
     public void Start()
     {
-        health.SetStatModifier(strength.GetValue());
-        health.Initialize();
+        UpdatePointStatsModifiersFromOtherStats();
 
-        mana.SetStatModifier(spirit.GetValue());
-        mana.Initialize();
+        health.SetCurrentValueOnMax();
+        mana.SetCurrentValueOnMax();
 
         HealthChanged();
         ManaChanged();
@@ -47,10 +48,10 @@ public class CharacterStats : MonoBehaviour
 
     private void Update()
     {
-        _HandleRegeneration();
+        HandleRegeneration();
     }
 
-    void _HandleRegeneration()
+    void HandleRegeneration()
     {
         health.Increase(Time.deltaTime * healthRegenerationSpeed * (float)healthRegeneration.GetValue());
         mana.Increase(Time.deltaTime * manaRegenerationSpeed * (float)manaRegeneration.GetValue());
@@ -165,6 +166,37 @@ public class CharacterStats : MonoBehaviour
         {
             NotifyManager.instance.ShowAttackNotify((int)damage, isMiss, isCritical);
         }
+    }
+
+    protected void RemoveAllStatsModifiers()
+    {
+        health.RemoveAllModifiers();
+        mana.RemoveAllModifiers();
+
+        minDamage.RemoveAllModifiers();
+        maxDamage.RemoveAllModifiers();
+        attackSpeed.RemoveAllModifiers();
+
+        armor.RemoveAllModifiers();
+
+        strength.RemoveAllModifiers();
+        agility.RemoveAllModifiers();
+        spirit.RemoveAllModifiers();
+        accuracy.RemoveAllModifiers();
+
+        maxHandleWeight.RemoveAllModifiers();
+
+        healthRegeneration.RemoveAllModifiers();
+        manaRegeneration.RemoveAllModifiers();
+    }
+
+    protected void UpdatePointStatsModifiersFromOtherStats()
+    {
+        health.AddModifier(strength.GetValue() * STRENGTH_ADD_HEALTH_MULTIPLIER);
+        mana.AddModifier(spirit.GetValue() * SPIRIT_ADD_MANA_MULTIPLIER);
+
+        HealthChanged();
+        ManaChanged();
     }
 
     protected virtual void HealthChanged() { }

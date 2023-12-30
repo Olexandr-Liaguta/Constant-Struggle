@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MapCell : MonoBehaviour
@@ -15,34 +14,40 @@ public class MapCell : MonoBehaviour
     [SerializeField] private Columns column;
 
     [SerializeField] private Button button;
-    [SerializeField] private GameController gameController;
 
-    private LocationCell currentLocation;
+    private GameMapData.LocationCell locationCell;
 
     private void Start()
     {
-        currentLocation = gameController.locationRows[((int)row - 1)].columns[(int)column - 1];
+        InitLocations();
+    }
 
-        if (currentLocation.isHome) return;
+    private void InitLocations()
+    {
+        var locarionRow = GameMapData.locationRows[((int)row - 1)];
+        if (locarionRow == null) return;
+
+        locationCell = locarionRow.columns[(int)column - 1];
+        if (locationCell == null || locationCell.isHome) return;
 
         UpdateButtonColor();
     }
 
     private void UpdateButtonColor()
     {
-        LocationCellStatus status = currentLocation.status;
+        GameMapData.LocationCellStatus status = locationCell.status;
 
-        if (status == LocationCellStatus.Red)
+        if (status == GameMapData.LocationCellStatus.Red)
         {
             this.SetButtonColors(new Color(0.8f, 0, 0, 1));
         }
 
-        if (status == LocationCellStatus.Yellow)
+        if (status == GameMapData.LocationCellStatus.Yellow)
         {
             this.SetButtonColors(Color.yellow);
         }
 
-        if (status == LocationCellStatus.Green)
+        if (status == GameMapData.LocationCellStatus.Green)
         {
             this.SetButtonColors(new Color(0, 0.8f, 0, 1));
         }
@@ -66,9 +71,9 @@ public class MapCell : MonoBehaviour
 
     public void OnClickCell()
     {
-        Debug.Log(currentLocation.score);
+        Debug.Log(locationCell.score);
 
-        if (currentLocation.isHome) return;
+        if (locationCell.isHome) return;
 
         Loader.LoadScene(Loader.Scene.Game);
 

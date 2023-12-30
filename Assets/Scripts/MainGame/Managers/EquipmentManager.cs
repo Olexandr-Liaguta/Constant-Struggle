@@ -3,48 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EquipmentSlotExact { Head, Chest, Legs, Hand_1, Hand_2, Feet, Gloves, Ring_1, Ring_2, Amulet, None }
+public enum EquipmentSlotExact { Head, Chest, Legs, Hand_1, Hand_2, Feet, Gloves, Ring_1, Ring_2, Amulet }
+
+public enum EquipmentSlot { Head, Chest, Legs, Hand, Feet, Gloves, Ring, Amulet }
+
 
 public class EquipmentManager : MonoBehaviour
 {
-    #region Singelton
-
-    public static EquipmentManager instance { get; private set; }
-
-    void Awake()
-    {
-        instance = this;
-    }
-
-    #endregion
-
-    public event EventHandler<OnEquipmentChangedArgs> OnEquipmentChanged;
-    public class OnEquipmentChangedArgs : EventArgs
-    {
-        public EquipmentSlotExact slot;
-        public InventoryItem newItem;
-        public InventoryItem oldItem;
-    }
+    public static EquipmentManager Instance { get; private set; }
 
 
+    public event EventHandler OnEquipmentChanged;
 
     [SerializeField] Equipment headDefaultEquipment, legsDefaultEquipment, chestDefaultEquipment;
     public SkinnedMeshRenderer targetMesh;
 
     Dictionary<EquipmentSlotExact, InventoryItem> defaultEquipment = new() {
-        {EquipmentSlotExact.Ring_1, null },
-        {EquipmentSlotExact.Hand_1, null },
-        {EquipmentSlotExact.Head, null },
-        {EquipmentSlotExact.Hand_2, null },
-        {EquipmentSlotExact.Ring_2, null },
-        {EquipmentSlotExact.Amulet, null },
-        {EquipmentSlotExact.Gloves, null },
-        {EquipmentSlotExact.Chest, null },
-        {EquipmentSlotExact.Legs, null },
-        {EquipmentSlotExact.Feet, null },
-    };
-
-    Dictionary<EquipmentSlotExact, InventoryItem> currentEquipment = new() {
         {EquipmentSlotExact.Ring_1, null },
         {EquipmentSlotExact.Hand_1, null },
         {EquipmentSlotExact.Head, null },
@@ -72,9 +46,16 @@ public class EquipmentManager : MonoBehaviour
 
 
 
+    void Awake()
+    {
+        Instance = this;
+    }
+
 
     private void Start()
     {
+        SaveManager.Instance.OnLoadGame += SaveManager_OnLoadGame;
+
         defaultEquipment[EquipmentSlotExact.Head] = new InventoryItem(headDefaultEquipment);
         defaultEquipment[EquipmentSlotExact.Chest] = new InventoryItem(chestDefaultEquipment);
         defaultEquipment[EquipmentSlotExact.Legs] = new InventoryItem(legsDefaultEquipment);
@@ -82,12 +63,17 @@ public class EquipmentManager : MonoBehaviour
         _EquipDefaultItems();
     }
 
+    private void SaveManager_OnLoadGame(object sender, EventArgs e)
+    {
+        OnEquipmentChanged?.Invoke(this, EventArgs.Empty);
+    }
+
     private void Update()
     {
         // if (Input.GetKeyDown(KeyCode.U)) UnequipAll();
     }
 
-    EquipmentSlotExact _HandleEquipmentSlot(EquipmentSlot equipmentSlot)
+    EquipmentSlotExact? _HandleEquipmentSlot(EquipmentSlot equipmentSlot)
     {
         switch (equipmentSlot)
         {
@@ -101,12 +87,12 @@ public class EquipmentManager : MonoBehaviour
             case EquipmentSlot.Ring: return _GetAvailableRingEquipment();
         }
 
-        return EquipmentSlotExact.None;
+        return null;
     }
 
     EquipmentSlotExact _GetAvailableHandEquipment()
     {
-        if (currentEquipment[EquipmentSlotExact.Hand_1] == null)
+        if (PlayerInventoryData.GetInventoryItemFromEquipment(EquipmentSlotExact.Hand_1) == null)
         {
             return EquipmentSlotExact.Hand_1;
         }
@@ -116,7 +102,7 @@ public class EquipmentManager : MonoBehaviour
 
     EquipmentSlotExact _GetAvailableRingEquipment()
     {
-        if (currentEquipment[EquipmentSlotExact.Ring_1] == null)
+        if (PlayerInventoryData.GetInventoryItemFromEquipment(EquipmentSlotExact.Ring_1) == null)
         {
             return EquipmentSlotExact.Ring_1;
         }
@@ -126,31 +112,31 @@ public class EquipmentManager : MonoBehaviour
 
     public void Equip(InventoryItem newInventoryItem)
     {
-        var newItem = newInventoryItem.item as Equipment;
-
-        EquipmentSlotExact equipmentSlot = _HandleEquipmentSlot(newItem.equipmentSlot);
+        Equipment newItem = newInventoryItem.item as Equipment;
 
         _SetEquipmentBlendShapes(newItem, 100);
 
-        if (newItem.mesh)
+        EquipmentSlotExact? equipmentSlotNullable = _HandleEquipmentSlot(newItem.equipmentSlot); ;
+
+        if (equipmentSlotNullable != null)
         {
-            _HandleMesh(newItem.mesh, equipmentSlot);
-        }
+            EquipmentSlotExact equipmentSlot = (EquipmentSlotExact)equipmentSlotNullable;
 
-        if (!newInventoryItem.item.isDefaultItem)
-        {
-            InventoryItem oldInventoryItem = Unequip(equipmentSlot);
-
-            currentEquipment[equipmentSlot] = newInventoryItem;
-
-            OnEquipmentChanged?.Invoke(this, new OnEquipmentChangedArgs
+            if (newItem.mesh)
             {
-                slot = equipmentSlot,
-                newItem = newInventoryItem,
-                oldItem = null,
-            });
+                _HandleMesh(newItem.mesh, equipmentSlot);
+            }
 
+            if (!newInventoryItem.item.isDefaultItem)
+            {
+                InventoryItem oldInventoryItem = Unequip(equipmentSlot);
+
+                PlayerInventoryData.SetEquipmentSlot(equipmentSlot, newInventoryItem);
+
+                OnEquipmentChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
+
     }
 
     void _HandleMesh(SkinnedMeshRenderer mesh, EquipmentSlotExact equipmentSlot)
@@ -165,7 +151,7 @@ public class EquipmentManager : MonoBehaviour
 
     public InventoryItem Unequip(EquipmentSlotExact equipmentSlot)
     {
-        InventoryItem oldItem = currentEquipment[equipmentSlot];
+        InventoryItem oldItem = PlayerInventoryData.GetInventoryItemFromEquipment(equipmentSlot);
 
         if (oldItem == null) return null;
 
@@ -174,18 +160,14 @@ public class EquipmentManager : MonoBehaviour
             Destroy(currentMeshes[equipmentSlot].gameObject);
         }
 
-        PlayerInventoryManager.instance.Add(oldItem);
+        PlayerInventoryManager.Instance.Add(oldItem);
 
         _SetEquipmentBlendShapes(oldItem.item as Equipment, 0);
 
-        currentEquipment[equipmentSlot] = null;
+        PlayerInventoryData.SetEquipmentSlot(equipmentSlot, null);
 
-        OnEquipmentChanged?.Invoke(this, new OnEquipmentChangedArgs
-        {
-            slot = equipmentSlot,
-            newItem = null,
-            oldItem = oldItem,
-        });
+        OnEquipmentChanged?.Invoke(this, EventArgs.Empty);
+
 
         var defaultEquipment = this.defaultEquipment[equipmentSlot];
 
@@ -207,9 +189,9 @@ public class EquipmentManager : MonoBehaviour
 
     public void UnequipAll()
     {
-        foreach (var inventoryItem in currentEquipment)
+        foreach (var equipment in PlayerInventoryData.GetEquipments())
         {
-            Unequip(inventoryItem.Key);
+            Unequip(equipment.slot);
         }
         _EquipDefaultItems();
     }
@@ -223,18 +205,5 @@ public class EquipmentManager : MonoBehaviour
                 Equip(item);
             }
         }
-    }
-
-    public EquipmentSlotExact? GetEquipmentSlot(InventoryItem inventoryItem)
-    {
-        foreach (var equipment in currentEquipment)
-        {
-            if (equipment.Value?.id == inventoryItem.id)
-            {
-                return equipment.Key;
-            }
-        }
-
-        return null;
     }
 }

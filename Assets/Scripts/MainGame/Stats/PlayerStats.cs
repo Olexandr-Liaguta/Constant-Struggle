@@ -32,172 +32,97 @@ public class PlayerStats : CharacterStats
     {
         base.Start();
 
-        EquipmentManager.instance.OnEquipmentChanged += ChangeEquipment;
+        EquipmentManager.Instance.OnEquipmentChanged += EquipmentManager_OnEquipmentChanged; ;
 
         OnHealthChange?.Invoke(this, new OnHealthChangeArgs { health = health.currentValue, maxHealth = GetMaxHealth() });
         OnManaChange?.Invoke(this, new OnManaChangeArgs { mana = mana.currentValue, maxMana = mana.GetMaxValue() });
     }
 
-    void ChangeEquipment(object sender, EquipmentManager.OnEquipmentChangedArgs args)
+    private void EquipmentManager_OnEquipmentChanged(object sender, EventArgs e)
     {
-        if (args.oldItem != null)
-        {
-            _RemoveModifiers(args.oldItem);
-        }
-
-        if (args.newItem != null)
-        {
-            _AddModifiers(args.newItem);
-        }
-
-        _UpdatePointStats();
-
-        HealthChanged();
-        ManaChanged();
+        UpdateStats();
     }
 
-    private void _AddModifiers(InventoryItem inventoryItem)
+    void UpdateStats()
     {
-        var modifiersMap = (inventoryItem.item as Equipment).modifiersMap;
+        RemoveAllStatsModifiers();
 
-        if (modifiersMap != null)
+        var equipments = PlayerInventoryData.GetEquipments();
+
+        foreach(var equip in equipments)
         {
-            _HandleAddModifierMap(modifiersMap);
-        }
+            var equipmentModifiers = (equip.inventoryItem?.item as Equipment)?.addModifiers;
 
-        var addModifiersMap = inventoryItem.addModifiers;
-
-        if (addModifiersMap != null)
-        {
-            _HandleAddModifierMap(addModifiersMap);
-        }
-    }
-
-    void _HandleAddModifierMap(Dictionary<Modifier, ModifierValue> modifiersMap)
-    {
-        foreach (var modifier in modifiersMap)
-        {
-            switch (modifier.Key)
+            if (equipmentModifiers != null)
             {
-                case Modifier.Armor:
-                    armor.AddModifier(modifier.Value.value);
+                UpdateStatFromModifiers(equipmentModifiers);
+            }
+
+            var inventoryModifiers = equip.inventoryItem?.addModifiers;
+
+            if (inventoryModifiers != null)
+            {
+                UpdateStatFromModifiers(inventoryModifiers);
+            }
+        }
+
+        UpdatePointStatsModifiersFromOtherStats();
+    }
+
+    void UpdateStatFromModifiers(List<ItemManager.AddModifier> modifiers)
+    {
+        foreach (var modifier in modifiers)
+        {
+            switch (modifier.attribute)
+            {
+                case Attribute.Armor:
+                    armor.AddModifier(modifier.value.value);
                     break;
 
-                case Modifier.Damage:
-                    minDamage.AddModifier(modifier.Value.min);
-                    maxDamage.AddModifier(modifier.Value.max);
+                case Attribute.Damage:
+                    minDamage.AddModifier(modifier.value.min);
+                    maxDamage.AddModifier(modifier.value.max);
                     break;
 
-                case Modifier.AttackSpeed:
-                    attackSpeed.AddModifier(modifier.Value.value);
+                case Attribute.AttackSpeed:
+                    attackSpeed.AddModifier(modifier.value.value);
                     break;
 
-                case Modifier.Health:
-                    health.AddModifier(modifier.Value.value);
+                case Attribute.Health:
+                    health.AddModifier(modifier.value.value);
                     break;
 
-                case Modifier.Mana:
-                    mana.AddModifier(modifier.Value.value);
+                case Attribute.Mana:
+                    mana.AddModifier(modifier.value.value);
                     break;
                 
-                case Modifier.Accuracy:
-                    accuracy.AddModifier(modifier.Value.value);
+                case Attribute.Accuracy:
+                    accuracy.AddModifier(modifier.value.value);
                     break;
                 
-                case Modifier.Agility:
-                    agility.AddModifier(modifier.Value.value);
+                case Attribute.Agility: 
+                    agility.AddModifier(modifier.value.value);
                     break;
                     
-                case Modifier.Spirit:
-                    spirit.AddModifier(modifier.Value.value);
+                case Attribute.Spirit:
+                    spirit.AddModifier(modifier.value.value);
                     break;
                 
-                case Modifier.Strength:
-                    strength.AddModifier(modifier.Value.value);
+                case Attribute.Strength:
+                    strength.AddModifier(modifier.value.value);
                     break;
-                case Modifier.HealthRegeneration:
-                    healthRegeneration.AddModifier(modifier.Value.value);
+                case Attribute.HealthRegeneration:
+                    healthRegeneration.AddModifier(modifier.value.value);
                     break;
-                case Modifier.ManaRegeneration:
-                    manaRegeneration.AddModifier(modifier.Value.value);
-                    break;
-            }
-        }
-    }
-
-    private void _RemoveModifiers(InventoryItem inventoryItem)
-    {
-        var modifiersMap = (inventoryItem.item as Equipment).modifiersMap;
-
-        if (modifiersMap != null)
-        {
-            _HandleRemoveModifiersMap(modifiersMap);
-        }
-
-        var addModifiersMap = inventoryItem.addModifiers;
-
-        if (addModifiersMap != null)
-        {
-            _HandleRemoveModifiersMap(addModifiersMap);
-        }
-    }
-
-    void _HandleRemoveModifiersMap(Dictionary<Modifier, ModifierValue> modifiersMap)
-    {
-        foreach (var modifier in modifiersMap)
-        {
-            switch (modifier.Key)
-            {
-                case Modifier.Armor:
-                    armor.RemoveModifier(modifier.Value.value);
-                    break;
-
-                case Modifier.Damage:
-                    minDamage.RemoveModifier(modifier.Value.min);
-                    maxDamage.RemoveModifier(modifier.Value.max);
-                    break;
-
-                case Modifier.AttackSpeed:
-                    attackSpeed.RemoveModifier(modifier.Value.value);
-                    break;
-
-                case Modifier.Health:
-                    health.RemoveModifier(modifier.Value.value);
-                    break;
-
-                case Modifier.Mana:
-                    mana.RemoveModifier(modifier.Value.value);
-                    break;
-
-                case Modifier.Accuracy:
-                    accuracy.RemoveModifier(modifier.Value.value);
-                    break;
-
-                case Modifier.Agility:
-                    agility.RemoveModifier(modifier.Value.value);
-                    break;
-
-                case Modifier.Spirit:
-                    spirit.RemoveModifier(modifier.Value.value);
-                    break;
-
-                case Modifier.Strength:
-                    strength.RemoveModifier(modifier.Value.value);
-                    break;
-                case Modifier.HealthRegeneration:
-                    healthRegeneration.RemoveModifier(modifier.Value.value);
-                    break;
-                case Modifier.ManaRegeneration:
-                    manaRegeneration.RemoveModifier(modifier.Value.value);
+                case Attribute.ManaRegeneration:
+                    manaRegeneration.AddModifier(modifier.value.value);
                     break;
             }
         }
     }
 
-    void _UpdatePointStats()
-    {
-        health.SetStatModifier(strength.GetValue());
-    }
+
+    
 
     protected override void HealthChanged()
     {

@@ -19,7 +19,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExit
         inventoryUI = GetComponentInParent<InventoryUI>();
     }
 
-    public void AddItem(InventoryItem newItem)
+    public void SetItem(InventoryItem newItem)
     {
         inventoryItem = newItem;
 

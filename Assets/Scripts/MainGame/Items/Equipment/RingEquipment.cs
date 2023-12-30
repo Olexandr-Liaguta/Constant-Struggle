@@ -9,6 +9,6 @@ public class RingEquipment : Equipment
 
     public override void OnLaunch()
     {
-        modifiersMap.Add(Modifier.Armor, new ModifierValue(armor));
+        addModifiers.Add(new ItemManager.AddModifier() { attribute = Attribute.Armor, value = new ModifierValue(armor) });
     }
 }

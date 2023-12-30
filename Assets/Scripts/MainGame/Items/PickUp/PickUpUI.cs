@@ -16,7 +16,7 @@ public class PickUpUI : MonoBehaviour
 
     public void ShowPickUpItems(object sender, PickUpManager.OnShowPickUpArgs args)
     {
-        GameManager.instance.StackCameraAndShowCursor();
+        GameManager.Instance.StackCameraAndShowCursor();
 
         InstantiatePickUpItems(args.items);
 
@@ -68,9 +68,9 @@ public class PickUpUI : MonoBehaviour
 
     void ClosePickUpItems()
     {
-        if (GameManager.instance == null) return;
+        if (GameManager.Instance == null) return;
 
-        GameManager.instance.UnstackCameraAndHideCursor();
+        GameManager.Instance.UnstackCameraAndHideCursor();
 
         pickUpCanvas.SetActive(false);
 

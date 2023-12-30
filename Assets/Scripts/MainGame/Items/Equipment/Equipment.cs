@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+using System;
 
-
+[Serializable]
 public class ModifierValue
 {
     public int value;
@@ -26,12 +26,12 @@ public class ModifierValue
 [CreateAssetMenu(fileName = "New Equipment", menuName = "Inventory/Equipment/Equipment")]
 public class Equipment : Item
 {
+    public enum EquipmentMeshRegion { Legs, Arms, Torso }
+
     public EquipmentSlot equipmentSlot;
     public SkinnedMeshRenderer mesh;
     public EquipmentMeshRegion[] coveredMeshRegions;
 
-    public Dictionary<Modifier, ModifierValue> modifiersMap = new();
+    public List<ItemManager.AddModifier> addModifiers = new();
 }
 
-public enum EquipmentSlot { Head, Chest, Legs, Hand, Feet, Gloves, Ring, Amulet }
-public enum EquipmentMeshRegion { Legs, Arms, Torso }

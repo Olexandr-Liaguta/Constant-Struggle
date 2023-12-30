@@ -31,19 +31,19 @@ public class Tooltip : MonoBehaviour
 
 
 
-    Dictionary<Modifier, string> modifierStrings = new()
+    Dictionary<Attribute, string> modifierStrings = new()
     {
-        {Modifier.Armor, "Armor" },
-        {Modifier.AttackSpeed, "Attack speed" },
-        {Modifier.Health, "Health" },
-        {Modifier.Mana, "Mana" },
-        {Modifier.Damage, "Damage" },
-        {Modifier.Accuracy, "Accuracy" },
-        {Modifier.Spirit, "Spirit" },
-        {Modifier.Strength, "Strength" },
-        {Modifier.Agility, "Agility" },
-        {Modifier.HealthRegeneration, "Health regeneration" },
-        {Modifier.ManaRegeneration, "Mana regeneration" },
+        {Attribute.Armor, "Armor" },
+        {Attribute.AttackSpeed, "Attack speed" },
+        {Attribute.Health, "Health" },
+        {Attribute.Mana, "Mana" },
+        {Attribute.Damage, "Damage" },
+        {Attribute.Accuracy, "Accuracy" },
+        {Attribute.Spirit, "Spirit" },
+        {Attribute.Strength, "Strength" },
+        {Attribute.Agility, "Agility" },
+        {Attribute.HealthRegeneration, "Health regeneration" },
+        {Attribute.ManaRegeneration, "Mana regeneration" },
     };
 
 
@@ -70,7 +70,7 @@ public class Tooltip : MonoBehaviour
         {
             var equipment = inventoryItem.item as Equipment;
 
-            foreach(var modifierAndValue in equipment.modifiersMap)
+            foreach(ItemManager.AddModifier modifierAndValue in equipment.addModifiers)
             {
                 InstantiateTooltipStatPrefab(defaultStatsParent.transform, modifierAndValue, false);
             }
@@ -93,7 +93,7 @@ public class Tooltip : MonoBehaviour
         mainTooltip.SetActive(true);
     }
 
-    void InstantiateTooltipStatPrefab(Transform parentTransform, KeyValuePair<Modifier, ModifierValue> modifierAndValue, bool isAdditional)
+    void InstantiateTooltipStatPrefab(Transform parentTransform, ItemManager.AddModifier addModifier, bool isAdditional)
     {
         var instantiatedTooltipPrefab = Instantiate(tooltipStatPrefab);
 
@@ -101,7 +101,7 @@ public class Tooltip : MonoBehaviour
 
         var tooltipStatUI = instantiatedTooltipPrefab.GetComponent<TooltipStatUI>();
 
-        tooltipStatUI.SetStatText(modifierStrings[modifierAndValue.Key], modifierAndValue.Value, isAdditional);
+        tooltipStatUI.SetStatText(modifierStrings[addModifier.attribute], addModifier.value, isAdditional);
 
         instantiatedTooltipStatGOs.Add(instantiatedTooltipPrefab);
     }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Weapon Equipment", menuName = "Inventory/Equipment/Weapon Equipment")]
@@ -11,7 +12,7 @@ public class WeaponEquipment : Equipment
 
     public override void OnLaunch()
     {
-        modifiersMap.Add(Modifier.Damage, new ModifierValue(min: minDamage, max: maxDamage));
-        modifiersMap.Add(Modifier.AttackSpeed, new ModifierValue(attackSpeed));
+        addModifiers.Add(new ItemManager.AddModifier() { attribute = Attribute.Damage, value = new ModifierValue(min: minDamage, max: maxDamage) });
+        addModifiers.Add(new ItemManager.AddModifier() { attribute = Attribute.AttackSpeed, value = new ModifierValue(attackSpeed) });
     }
 }

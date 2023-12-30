@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum Modifier
+public enum Attribute
 {
     Damage,
     AttackSpeed,
@@ -22,7 +22,7 @@ public class ItemRarityRandom
 {
     public int rarityScore;
     public ItemRarity itemRarity;
-    public Dictionary<Modifier, ModifierValue> modifiers = new();
+    public List<ItemManager.AddModifier> modifiers = new();
 }
 
 public class ItemRarityManager : MonoBehaviour
@@ -84,7 +84,7 @@ public class ItemRarityManager : MonoBehaviour
 
         int randomModifiersCount = Random.Range(itemRarityModifier.fromModifiersCount, itemRarityModifier.toModifiersCount + 1);
 
-        List<Modifier> modifiers = System.Enum.GetValues(typeof(Modifier)).Cast<Modifier>().ToList();
+        List<Attribute> modifiers = System.Enum.GetValues(typeof(Attribute)).Cast<Attribute>().ToList();
 
         int rarityScore = ScoresHelper.itemRarityScores[rarity];
 
@@ -92,7 +92,7 @@ public class ItemRarityManager : MonoBehaviour
         {
             int randomModifierIndex = Random.Range(0, modifiers.Count);
 
-            Modifier randomModifier = modifiers[randomModifierIndex];
+            Attribute randomModifier = modifiers[randomModifierIndex];
 
             int modifierScore = ScoresHelper.modifierScore[randomModifier];
 
@@ -100,14 +100,25 @@ public class ItemRarityManager : MonoBehaviour
 
             int modifierValue = availableScore / modifierScore;
 
-            if (randomModifier == Modifier.Damage)
+            if (randomModifier == Attribute.Damage)
             {
-                itemRarityRandom.modifiers.Add(randomModifier, new ModifierValue(min: modifierValue, max: modifierValue));
-
+                itemRarityRandom.modifiers.Add(
+                    new ItemManager.AddModifier()
+                    {
+                        attribute = randomModifier,
+                        value = new ModifierValue(min: modifierValue, max: modifierValue)
+                    }
+               );
             }
             else
             {
-                itemRarityRandom.modifiers.Add(randomModifier, new ModifierValue(modifierValue));
+                itemRarityRandom.modifiers.Add(
+                    new ItemManager.AddModifier()
+                    {
+                        attribute = randomModifier,
+                        value = new ModifierValue(modifierValue)
+                    }
+               );
             }
 
             itemRarityRandom.rarityScore += modifierValue * modifierScore;

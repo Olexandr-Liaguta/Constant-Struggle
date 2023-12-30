@@ -8,13 +8,11 @@ public class PointStat
     [SerializeField]
     private float baseValue;
 
-    private List<int> _modifiers = new();
+    private List<int> modifiers = new();
 
-    int _statModifier = 0;
-    int _statModifierMultiplier = 50;
     public float currentValue { get; private set; }
 
-    public void Initialize()
+    public void SetCurrentValueOnMax()
     {
         currentValue = GetMaxValue();
     }
@@ -22,9 +20,7 @@ public class PointStat
     public float GetMaxValue()
     {
         float maxValue = baseValue;
-        _modifiers.ForEach(x => maxValue += x);
-        maxValue += _statModifier * _statModifierMultiplier;
-
+        modifiers.ForEach(x => maxValue += x);
         return maxValue;
     }
 
@@ -54,16 +50,11 @@ public class PointStat
         return currentValue;
     }
 
-    public void SetStatModifier(int statModifier)
-    {
-        _statModifier = statModifier;
-    }
-
     public void AddModifier(int modifier)
     {
         if (modifier != 0)
         {
-            _modifiers.Add(modifier);
+            modifiers.Add(modifier);
             currentValue += modifier;
         }
     }
@@ -72,7 +63,7 @@ public class PointStat
     {
         if (modifier != 0)
         {
-            _modifiers.Remove(modifier);
+            modifiers.Remove(modifier);
             currentValue -= modifier;
 
             if (currentValue <= 0)
@@ -80,6 +71,11 @@ public class PointStat
                 currentValue = 1;
             }
         }
+    }
+
+    public void RemoveAllModifiers()
+    {
+        modifiers.Clear();
     }
 
 }

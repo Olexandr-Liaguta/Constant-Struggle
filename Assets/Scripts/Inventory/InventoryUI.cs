@@ -9,20 +9,21 @@ public class InventoryUI : MonoBehaviour
     public GameObject inventoryUI_GO;
 
     [SerializeField] private GameObject inventorySlotUIPrefab;
+    [SerializeField] Transform resourcesParent;
 
-    readonly Dictionary<Guid, GameObject> instantiatedItemSlots = new();
+
+    List<GameObject> instantiatedItemSlots = new();
 
     InventorySlotUI[] itemSlots;
     Guid selectedInventoryId;
 
-    [SerializeField] Transform resourcesParent;
     InventoryResourceUI[] resourceSlots;
 
     InventoryWeightUI inventoryWeightUI;
 
     void Start()
     {
-        PlayerInventoryManager.instance.onItemsChangedCallback += UpdateUI;
+        PlayerInventoryManager.Instance.OnItemsChanged += PlayerInventoryManager_OnItemsChanged;
 
         inventoryWeightUI = GetComponent<InventoryWeightUI>();
 
@@ -34,6 +35,11 @@ public class InventoryUI : MonoBehaviour
         inventoryUI_GO.SetActive(false);
     }
 
+    private void PlayerInventoryManager_OnItemsChanged(object sender, EventArgs e)
+    {
+        UpdateUI();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -42,16 +48,18 @@ public class InventoryUI : MonoBehaviour
             if (inventoryUI_GO.activeSelf)
             {
                 inventoryUI_GO.SetActive(false);
-                GameManager.instance.UnstackCameraAndHideCursor();
+                GameManager.Instance.UnstackCameraAndHideCursor();
             }
             else
             {
                 inventoryUI_GO.SetActive(true);
-                GameManager.instance.StackCameraAndShowCursor();
+                GameManager.Instance.StackCameraAndShowCursor();
             }
 
         }
     }
+
+
 
     public void SelectInventoryItem(Guid id)
     {
@@ -68,33 +76,21 @@ public class InventoryUI : MonoBehaviour
 
     void UpdateItemsUI()
     {
-        var itemGOs = new Dictionary<Guid, GameObject>(instantiatedItemSlots);
+        DestroyAllInventaryGameObjects();
 
-        foreach (InventoryItem inventorySlot in PlayerInventoryManager.instance.GetInventoryItems())
+        var inventoryItems = PlayerInventoryData.GetInventoryItems();
+
+        foreach (InventoryItem inventorySlot in inventoryItems)
         {
-            itemGOs.TryGetValue(inventorySlot.id, out GameObject GO);
+            GameObject instantiatedInventoryItem = Instantiate(inventorySlotUIPrefab);
 
-            if(GO == null)
-            {
-                GameObject instantiatedInventoryItem = Instantiate(inventorySlotUIPrefab);
+            instantiatedInventoryItem.transform.SetParent(itemsParent.transform);
 
-                instantiatedInventoryItem.transform.SetParent(itemsParent.transform);
+            var inventorySlotUI = instantiatedInventoryItem.GetComponent<InventorySlotUI>();
+            inventorySlotUI.SetItem(inventorySlot);
 
-                var inventorySlotUI = instantiatedInventoryItem.GetComponent<InventorySlotUI>();
+            instantiatedItemSlots.Add(instantiatedInventoryItem);
 
-                inventorySlotUI.AddItem(inventorySlot);
-
-                instantiatedItemSlots.Add(inventorySlot.id, instantiatedInventoryItem);
-            } else
-            {
-                itemGOs.Remove(inventorySlot.id);
-            }
-        }
-
-        foreach (var keyValuePair in itemGOs)
-        {
-            Destroy(keyValuePair.Value);
-            instantiatedItemSlots.Remove(keyValuePair.Key);
         }
 
         itemSlots = itemsParent.GetComponentsInChildren<InventorySlotUI>();
@@ -113,12 +109,19 @@ public class InventoryUI : MonoBehaviour
 
     void UpdateResourcesUI()
     {
-        var resources = PlayerInventoryManager.instance.GetResourses();
-
-        for (int i = 0; i < resourceSlots.Length; i++)
+        foreach (var resourceSlot in resourceSlots)
         {
-            int resourceValue = resources[resourceSlots[i].type];
-            resourceSlots[i].SetResourceValue(resourceValue);
+            resourceSlot.SetResourceValue(
+                PlayerInventoryData.GetResource(resourceSlot.type).value
+            );
+        }
+    }
+
+    void DestroyAllInventaryGameObjects()
+    {
+        foreach (GameObject gameObject in instantiatedItemSlots)
+        {
+            Destroy(gameObject);
         }
     }
 

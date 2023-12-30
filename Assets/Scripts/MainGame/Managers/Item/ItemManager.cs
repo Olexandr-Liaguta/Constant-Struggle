@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,13 @@ public class ItemManager : MonoBehaviour
     #endregion
 
     List<Item> allItems;
+
+    [Serializable]
+    public class AddModifier
+    {
+        public Attribute attribute;
+        public ModifierValue value;
+    }
 
     readonly Dictionary<ItemType, List<Item>> items = new()
     {
@@ -111,7 +119,7 @@ public class ItemManager : MonoBehaviour
 
     public List<InventoryItem> GetRandomItems(int score)
     {
-        int remainScore = Random.Range((int)(score * 0.85), (int)(score * 1.15));
+        int remainScore = UnityEngine.Random.Range((int)(score * 0.85), (int)(score * 1.15));
 
         List<InventoryItem> randomItems = new();
 
@@ -123,7 +131,7 @@ public class ItemManager : MonoBehaviour
             }
             else
             {
-                bool isResource = Random.Range(0, 100) < 50;
+                bool isResource = UnityEngine.Random.Range(0, 100) < 50;
 
                 if (isResource)
                 {
@@ -170,7 +178,7 @@ public class ItemManager : MonoBehaviour
 
     InventoryItem _GetRandomResource()
     {
-        int randomResourceIndex = Random.Range(0, resourceItems.Count);
+        int randomResourceIndex = UnityEngine.Random.Range(0, resourceItems.Count);
         ResourceItem randomResourceItem = resourceItems[randomResourceIndex];
 
         return new InventoryItem(randomResourceItem);
@@ -181,7 +189,7 @@ public class ItemManager : MonoBehaviour
         int quantityLimit = 200;
 
         int avaibleQuantity = Mathf.Clamp(remainScore / resourceScore, 0, quantityLimit);
-        return Random.Range(1, avaibleQuantity);
+        return UnityEngine.Random.Range(1, avaibleQuantity);
     }
 
     void HandleRandomEquipment(ref int remainScore, ref List<InventoryItem> randomItems)
@@ -211,9 +219,9 @@ public class ItemManager : MonoBehaviour
 
     ItemType _GetRandomItemType()
     {
-        var itemTypeValues = System.Enum.GetValues(typeof(ItemType));
+        var itemTypeValues = Enum.GetValues(typeof(ItemType));
 
-        int randomIndexItemType = Random.Range(0, itemTypeValues.Length);
+        int randomIndexItemType = UnityEngine.Random.Range(0, itemTypeValues.Length);
 
         return (ItemType)itemTypeValues.GetValue(randomIndexItemType);
     }
@@ -222,7 +230,7 @@ public class ItemManager : MonoBehaviour
     {
         List<Item> randomItemList = items[itemType];
 
-        int randomItemListIndex = Random.Range(0, randomItemList.Count);
+        int randomItemListIndex = UnityEngine.Random.Range(0, randomItemList.Count);
 
         return randomItemList[randomItemListIndex];
     }

@@ -1,53 +1,42 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInventoryManager : MonoBehaviour
 {
-    #region Singelton
+    public static PlayerInventoryManager Instance;
 
-    public static PlayerInventoryManager instance;
+    public event EventHandler OnItemsChanged;
 
     void Awake()
     {
-        instance = this;
+        Instance = this;
     }
 
-    #endregion
+    private void Start()
+    {
+        SaveManager.Instance.OnLoadGame += SaveManager_OnLoadGame;
+    }
 
-    [SerializeField] private InventorySO playerInventory;
-
-    public delegate void OnItemsChanged();
-    public OnItemsChanged onItemsChangedCallback;
+    private void SaveManager_OnLoadGame(object sender, EventArgs e)
+    {
+        OnItemsChanged?.Invoke(this, EventArgs.Empty);
+    }
 
     public bool Add(InventoryItem inventoryItem)
     {
-        bool isApplied = playerInventory.Add(inventoryItem);
+        bool isApplied = PlayerInventoryData.AddInventoryItem(inventoryItem);
 
-        if (onItemsChangedCallback != null) onItemsChangedCallback.Invoke();
+        OnItemsChanged?.Invoke(this, EventArgs.Empty);
 
         return isApplied;
     }
 
     public void Remove(InventoryItem item)
     {
-        playerInventory.Remove(item);
+        PlayerInventoryData.RemoveInventoryItem(item);
 
-        if (onItemsChangedCallback != null) onItemsChangedCallback.Invoke();
-    }
-
-    public float GetCurrentWeight()
-    {
-        return playerInventory.GetCurrentWeight();
-    }
-
-    public List<InventoryItem> GetInventoryItems()
-    {
-        return playerInventory.items;
-    }
-
-    public Dictionary<ResourceType, int> GetResourses()
-    {
-        return playerInventory.resources;
+        OnItemsChanged?.Invoke(this, EventArgs.Empty);
     }
 }

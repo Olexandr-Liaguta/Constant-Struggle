@@ -1,120 +1,117 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
-
+      
 public class Tooltip : MonoBehaviour
 {
-    #region Singletone
-    public static Tooltip instance;
-
-    private void Awake()
-    {
-        if(instance == null)
-        {
-            instance = this;
-        }
-    }
-    #endregion
-
-    [SerializeField] GameObject 
-        tooltipStatPrefab, 
-        defaultStatsTitle,
-        defaultStatsParent,
-        additionalStatsTitle,
-        additionalStatParent, 
-        mainTooltip;
+    [SerializeField] GameObject attributePrefab, dividerPrefab, contentGO;
 
     [SerializeField] ItemNameUI itemNameUI;
 
     List<GameObject> instantiatedTooltipStatGOs = new();
 
-
-
-    Dictionary<Attribute, string> modifierStrings = new()
+    private class AttributeTexts
     {
-        {Attribute.Armor, "Armor" },
-        {Attribute.AttackSpeed, "Attack speed" },
-        {Attribute.Health, "Health" },
-        {Attribute.Mana, "Mana" },
-        {Attribute.Damage, "Damage" },
-        {Attribute.Accuracy, "Accuracy" },
-        {Attribute.Spirit, "Spirit" },
-        {Attribute.Strength, "Strength" },
-        {Attribute.Agility, "Agility" },
-        {Attribute.HealthRegeneration, "Health regeneration" },
-        {Attribute.ManaRegeneration, "Mana regeneration" },
+        public Attribute attribute;
+        public string text;
+    }
+
+    List<AttributeTexts> attributeTexts = new()
+    {
+        new AttributeTexts()  { attribute = Attribute.AttackSpeed, text = "Attack speed"},
+        new AttributeTexts() { attribute = Attribute.Damage, text = "Damage" },
+
+        new AttributeTexts()  { attribute = Attribute.Armor, text = "Armor" } ,
+
+        new AttributeTexts()  { attribute = Attribute.Health, text = "Health" },
+        new AttributeTexts()  { attribute = Attribute.Mana, text = "Mana" },
+
+        new AttributeTexts() { attribute = Attribute.Accuracy, text = "Accuracy" },
+        new AttributeTexts() { attribute = Attribute.Spirit, text = "Spirit" },
+        new AttributeTexts()  {  attribute = Attribute.Strength, text = "Strength" },
+        new AttributeTexts() { attribute = Attribute.Agility, text = "Agility" },
+
+        new AttributeTexts() { attribute = Attribute.HealthRegeneration, text = "Health regeneration" },
+        new AttributeTexts() { attribute = Attribute.ManaRegeneration, text = "Mana regeneration"},
     };
 
 
     void Start()
     {
-        mainTooltip.SetActive(false);
-
-        HideStatsGOs();
+        foreach (Transform child in contentGO.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        gameObject.SetActive(false);
     }
 
-    void HideStatsGOs()
-    {
-        defaultStatsParent.SetActive(false);
-        additionalStatParent.SetActive(false);
-        defaultStatsTitle.SetActive(false);
-        additionalStatsTitle.SetActive(false);
-    }
 
-    public void ShowTooltip(InventoryItem inventoryItem)
+    public void Show(InventoryItem inventoryItem)
     {
         itemNameUI.SetInventoryItem(inventoryItem);
 
-        if(inventoryItem.item is Equipment)
+        bool hasInventoryItemMidifiers = inventoryItem.addModifiers != null && inventoryItem.addModifiers.Count > 0;
+
+        if (inventoryItem.item is Equipment)
         {
             var equipment = inventoryItem.item as Equipment;
 
-            foreach(ItemManager.AddModifier modifierAndValue in equipment.addModifiers)
+            foreach (ItemManager.AddModifier addModifier in equipment.addModifiers)
             {
-                InstantiateTooltipStatPrefab(defaultStatsParent.transform, modifierAndValue, false);
+                InstantiateTooltipStatPrefab(addModifier, false);
             }
 
-            defaultStatsParent.SetActive(true);
-            defaultStatsTitle.SetActive(true);
+            if (hasInventoryItemMidifiers)
+            {
+                InstantiateDivider();
+            }
         }
 
-        if (inventoryItem.addModifiers != null && inventoryItem.addModifiers.Count > 0)
+        if (hasInventoryItemMidifiers)
         {
             foreach (var modifierAndValue in inventoryItem.addModifiers)
             {
-                InstantiateTooltipStatPrefab(additionalStatParent.transform, modifierAndValue, true);
+                InstantiateTooltipStatPrefab(modifierAndValue, true);
             }
-
-            additionalStatParent.SetActive(true);
-            additionalStatsTitle.SetActive(true);
         }
 
-        mainTooltip.SetActive(true);
+        gameObject.SetActive(true);
     }
 
-    void InstantiateTooltipStatPrefab(Transform parentTransform, ItemManager.AddModifier addModifier, bool isAdditional)
+    void InstantiateTooltipStatPrefab(ItemManager.AddModifier addModifier, bool isAdditional)
     {
-        var instantiatedTooltipPrefab = Instantiate(tooltipStatPrefab);
+        GameObject instantiatedAttributePrefab = InstantiatePrefab(attributePrefab);
 
-        instantiatedTooltipPrefab.transform.SetParent(parentTransform);
+        var tooltipStatUI = instantiatedAttributePrefab.GetComponent<TooltipStatUI>();
 
-        var tooltipStatUI = instantiatedTooltipPrefab.GetComponent<TooltipStatUI>();
-
-        tooltipStatUI.SetStatText(modifierStrings[addModifier.attribute], addModifier.value, isAdditional);
-
-        instantiatedTooltipStatGOs.Add(instantiatedTooltipPrefab);
+        string attributeTitle = attributeTexts.Find(value => value.attribute == addModifier.attribute).text;
+        tooltipStatUI.SetStatText(attributeTitle, addModifier.value, isAdditional);
     }
 
-    public void HideTooltip()
+    private void InstantiateDivider()
     {
-        mainTooltip.SetActive(false);
+        InstantiatePrefab(dividerPrefab);
+    }
+
+    private GameObject InstantiatePrefab(GameObject prefab)
+    {
+        var instantiatedPrefab = Instantiate(prefab);
+        instantiatedPrefab.transform.SetParent(contentGO.transform);
+
+        // Its get bigger scale 
+        instantiatedPrefab.transform.localScale = Vector3.one;
+
+        instantiatedTooltipStatGOs.Add(instantiatedPrefab);
+
+        return instantiatedPrefab;
+    }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
         itemNameUI.Clear();
-
-        HideStatsGOs();
 
         instantiatedTooltipStatGOs.ForEach(Go => { Destroy(Go); });
         instantiatedTooltipStatGOs.Clear();
-
     }
 }

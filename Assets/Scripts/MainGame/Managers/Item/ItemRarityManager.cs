@@ -7,13 +7,17 @@ public enum Attribute
 {
     Damage,
     AttackSpeed,
+
     Armor,
+
     Health,
     Mana,
+
     Strength,
     Spirit,
     Accuracy,
     Agility,
+
     HealthRegeneration,
     ManaRegeneration,
 }
@@ -76,36 +80,37 @@ public class ItemRarityManager : MonoBehaviour
     {
         if (rarity == ItemRarity.Simple) return null;
 
-        ItemRarityRandom itemRarityRandom = new();
-
-        itemRarityRandom.itemRarity = rarity;
+        ItemRarityRandom itemRarityRandom = new()
+        {
+            itemRarity = rarity
+        };
 
         ItemRarityModifiers itemRarityModifier = RarityHelper.itemRarityModifiersInfo[rarity];
 
         int randomModifiersCount = Random.Range(itemRarityModifier.fromModifiersCount, itemRarityModifier.toModifiersCount + 1);
 
-        List<Attribute> modifiers = System.Enum.GetValues(typeof(Attribute)).Cast<Attribute>().ToList();
+        List<Attribute> allAttributes = System.Enum.GetValues(typeof(Attribute)).Cast<Attribute>().ToList();
 
         int rarityScore = ScoresHelper.itemRarityScores[rarity];
 
         for (int i = 0; i < randomModifiersCount; i++)
         {
-            int randomModifierIndex = Random.Range(0, modifiers.Count);
+            int randomAttributeIndex = Random.Range(0, allAttributes.Count);
 
-            Attribute randomModifier = modifiers[randomModifierIndex];
+            Attribute randomAttribute = allAttributes[randomAttributeIndex];
 
-            int modifierScore = ScoresHelper.modifierScore[randomModifier];
+            int attributeScore = ScoresHelper.attributeScore[randomAttribute];
 
             int availableScore = rarityScore / randomModifiersCount;
 
-            int modifierValue = availableScore / modifierScore;
+            int modifierValue = availableScore / attributeScore;
 
-            if (randomModifier == Attribute.Damage)
+            if (randomAttribute == Attribute.Damage)
             {
                 itemRarityRandom.modifiers.Add(
                     new ItemManager.AddModifier()
                     {
-                        attribute = randomModifier,
+                        attribute = randomAttribute,
                         value = new ModifierValue(min: modifierValue, max: modifierValue)
                     }
                );
@@ -115,15 +120,15 @@ public class ItemRarityManager : MonoBehaviour
                 itemRarityRandom.modifiers.Add(
                     new ItemManager.AddModifier()
                     {
-                        attribute = randomModifier,
+                        attribute = randomAttribute,
                         value = new ModifierValue(modifierValue)
                     }
                );
             }
 
-            itemRarityRandom.rarityScore += modifierValue * modifierScore;
+            itemRarityRandom.rarityScore += modifierValue * attributeScore;
 
-            modifiers.Remove(randomModifier);
+            allAttributes.Remove(randomAttribute);
         }
 
         return itemRarityRandom;

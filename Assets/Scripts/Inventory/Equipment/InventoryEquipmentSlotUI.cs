@@ -6,7 +6,7 @@ public class InventoryEquipmentSlotUI : MonoBehaviour
 
     [HideInInspector] public InventorySlotUI inventorySlotUI;
 
-    private void Start()
+    private void Awake()
     {
         inventorySlotUI = GetComponentInChildren<InventorySlotUI>();
     }

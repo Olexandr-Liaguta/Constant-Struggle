@@ -20,4 +20,9 @@ MonoBehaviour:
   equipmentSlot: 5
   mesh: {fileID: 0}
   coveredMeshRegions: 
-  armor: 4
+  addModifiers:
+  - attribute: 2
+    value:
+      value: 6
+      min: 0
+      max: 0

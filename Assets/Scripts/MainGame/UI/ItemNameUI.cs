@@ -3,18 +3,18 @@ using TMPro;
 
 public class ItemNameUI : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI textComponent;
+    TextMeshProUGUI textComponent;
 
     InventoryItem inventoryItem;
 
-    private void Start()
+    private void Awake()
     {
         textComponent = GetComponent<TextMeshProUGUI>();
     }
 
-    public void SetInventoryItem(InventoryItem _inventoryItem)
+    public void SetInventoryItem(InventoryItem inventoryItem)
     {
-        inventoryItem = _inventoryItem;
+        this.inventoryItem = inventoryItem;
 
         HandleText();
     }

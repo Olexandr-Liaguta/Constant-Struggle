@@ -31,19 +31,7 @@ public static class PlayerInventoryData
         public InventoryItem inventoryItem;
     }
 
-    private static List<EquipmentSlot> equipments = new() {
-        new EquipmentSlot { slot = EquipmentSlotExact.Ring_1, inventoryItem = null},
-        new EquipmentSlot { slot = EquipmentSlotExact.Ring_2, inventoryItem = null},
-        new EquipmentSlot { slot = EquipmentSlotExact.Feet, inventoryItem = null},
-        new EquipmentSlot { slot = EquipmentSlotExact.Amulet, inventoryItem = null},
-        new EquipmentSlot { slot = EquipmentSlotExact.Chest, inventoryItem = null},
-        new EquipmentSlot { slot = EquipmentSlotExact.Gloves, inventoryItem = null},
-        new EquipmentSlot { slot = EquipmentSlotExact.Hand_1, inventoryItem = null},
-        new EquipmentSlot { slot = EquipmentSlotExact.Hand_2, inventoryItem = null},
-        new EquipmentSlot { slot = EquipmentSlotExact.Head, inventoryItem = null},
-        new EquipmentSlot { slot = EquipmentSlotExact.Legs, inventoryItem = null},
-    };
-
+    private static List<EquipmentSlot> equipments = new() { };
 
 
     public static void SetEmptyInventory()
@@ -58,18 +46,7 @@ public static class PlayerInventoryData
             new Resource { type = ResourceType.Wood, value=0},
         };
 
-        equipments = new() {
-            new EquipmentSlot { slot = EquipmentSlotExact.Ring_1, inventoryItem = null},
-            new EquipmentSlot { slot = EquipmentSlotExact.Ring_2, inventoryItem = null},
-            new EquipmentSlot { slot = EquipmentSlotExact.Feet, inventoryItem = null},
-            new EquipmentSlot { slot = EquipmentSlotExact.Amulet, inventoryItem = null},
-            new EquipmentSlot { slot = EquipmentSlotExact.Chest, inventoryItem = null},
-            new EquipmentSlot { slot = EquipmentSlotExact.Gloves, inventoryItem = null},
-            new EquipmentSlot { slot = EquipmentSlotExact.Hand_1, inventoryItem = null},
-            new EquipmentSlot { slot = EquipmentSlotExact.Hand_2, inventoryItem = null},
-            new EquipmentSlot { slot = EquipmentSlotExact.Head, inventoryItem = null},
-            new EquipmentSlot { slot = EquipmentSlotExact.Legs, inventoryItem = null},
-        };
+        equipments = new();
     }
 
 
@@ -111,7 +88,18 @@ public static class PlayerInventoryData
     {
         int equipmentIndex = equipments.FindIndex(equipment => equipment.slot == slot);
 
-        equipments[equipmentIndex].inventoryItem = inventoryItem;
+        if (equipmentIndex >= 0)
+        {
+            equipments[equipmentIndex].inventoryItem = inventoryItem;
+        }
+        else
+        {
+            equipments.Add(new EquipmentSlot()
+            {
+                inventoryItem = inventoryItem,
+                slot = slot
+            });
+        }
     }
 
     public static InventoryItem GetInventoryItemFromEquipment(EquipmentSlotExact slot)

@@ -20,4 +20,9 @@ MonoBehaviour:
   equipmentSlot: 2
   mesh: {fileID: 4861958610186060763, guid: ac5f878441eab844e8baeac09fc72b97, type: 3}
   coveredMeshRegions: 00000000
-  armor: 3
+  addModifiers:
+  - attribute: 2
+    value:
+      value: 20
+      min: 0
+      max: 0

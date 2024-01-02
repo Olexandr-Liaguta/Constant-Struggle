@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   equipmentSlot: 5
-  slot: {fileID: 0}
+  inventorySlotUI: {fileID: 0}
 --- !u!1 &6378306025820620007
 GameObject:
   m_ObjectHideFlags: 0

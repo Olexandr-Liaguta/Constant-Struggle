@@ -125,6 +125,7 @@ public class SaveManager : MonoBehaviour
         }
         catch (Exception ex)
         {
+            Debug.LogException(ex);
             PlayerInventoryData.SetEmptyInventory();
         }
     }

@@ -21,7 +21,7 @@ public abstract class ScoresHelper
         { ResourceType.Wood, 1 },
     };
 
-    static public readonly Dictionary<Attribute, int> modifierScore = new()
+    static public readonly Dictionary<Attribute, int> attributeScore = new()
     {
         { Attribute.Armor, 1 },
         { Attribute.AttackSpeed, 6 },

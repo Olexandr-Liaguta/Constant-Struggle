@@ -57,6 +57,11 @@ public class PointStat
             modifiers.Add(modifier);
             currentValue += modifier;
         }
+
+        if (currentValue > GetMaxValue())
+        {
+            currentValue = GetMaxValue();
+        }
     }
 
     public void RemoveModifier(int modifier)

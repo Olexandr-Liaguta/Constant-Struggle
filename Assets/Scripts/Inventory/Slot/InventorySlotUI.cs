@@ -14,7 +14,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     InventoryItem inventoryItem;
 
-    private void Start()
+    private void Awake()
     {
         inventoryUI = GetComponentInParent<InventoryUI>();
     }
@@ -64,12 +64,12 @@ public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         if (inventoryItem != null)
         {
-            Tooltip.instance.ShowTooltip(inventoryItem);
+            TooltipManager.Instance.Show(inventoryItem);
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Tooltip.instance.HideTooltip();
+        TooltipManager.Instance.Hide();
     }
 }

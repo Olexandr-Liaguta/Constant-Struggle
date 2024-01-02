@@ -6,22 +6,12 @@ using UnityEngine;
 
 public class InventoryEquipmentUI : MonoBehaviour
 {
-    public Transform equipmentsParent;
-
-    List<InventoryEquipmentSlotUI> equipmentSlotUIs = new();
-
+    [SerializeField]
+    private List<InventoryEquipmentSlotUI> equipmentSlotUIs = new();
 
     void Start()
     {
         EquipmentManager.Instance.OnEquipmentChanged += UpdateEquipmentUI;
-
-
-        var equipmentSlotsInChildrens = equipmentsParent.GetComponentsInChildren<InventoryEquipmentSlotUI>();
-
-        foreach (var equipmentSlot in equipmentSlotsInChildrens)
-        {
-            equipmentSlotUIs.Add(equipmentSlot);
-        }
     }
 
     void UpdateEquipmentUI(object sender, EventArgs args)

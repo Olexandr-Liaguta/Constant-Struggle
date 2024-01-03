@@ -12,16 +12,10 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField]
     private GameObject sprite;
 
-    private int focusedItemId;
+    private Collider focusedItem;
     private GameObject instantiatedSprite;
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
     void Update()
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactRadius, interactMask);
@@ -35,19 +29,17 @@ public class PlayerInteraction : MonoBehaviour
         Collider firstCollider = hitColliders[0];
 
         HandleFocusSprite(firstCollider);
-
-        HandleInteract(firstCollider);
     }
 
     private void HandleFocusSprite(Collider collider)
     {
         int itemId = collider.GetInstanceID();
 
-        if (itemId != focusedItemId)
+        if (focusedItem == null || itemId != focusedItem.GetInstanceID())
         {
             RemoveFocus();
 
-            focusedItemId = itemId;
+            focusedItem = collider;
 
             instantiatedSprite = Instantiate(sprite);
 
@@ -67,15 +59,15 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    private void HandleInteract(Collider collider)
+    public void HandleInteract()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (focusedItem != null)
         {
-            interactable = collider.GetComponent<Interactable>();
+            interactable = focusedItem.GetComponent<Interactable>();
 
             interactable.Interact();
 
-            focusedItemId = -1;
+            focusedItem = null;
 
             Destroy(instantiatedSprite);
         }

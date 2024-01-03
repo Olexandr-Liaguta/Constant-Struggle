@@ -5,21 +5,19 @@ using TMPro;
 
 public class InventoryUI : MonoBehaviour
 {
-    public Transform itemsParent;
-    public GameObject inventoryUI_GO;
-
+    [SerializeField] private Transform itemsParent;
     [SerializeField] private GameObject inventorySlotUIPrefab;
-    [SerializeField] Transform resourcesParent;
+    [SerializeField] private Transform resourcesParent;
 
 
-    List<GameObject> instantiatedItemSlots = new();
+    private List<GameObject> instantiatedItemSlots = new();
 
-    InventorySlotUI[] itemSlots;
-    Guid selectedInventoryId;
+    private InventorySlotUI[] itemSlots;
+    private Guid selectedInventoryId;
 
-    InventoryResourceUI[] resourceSlots;
+    private InventoryResourceUI[] resourceSlots;
 
-    InventoryWeightUI inventoryWeightUI;
+    private InventoryWeightUI inventoryWeightUI;
 
     void Start()
     {
@@ -32,34 +30,13 @@ public class InventoryUI : MonoBehaviour
         UpdateUI();
 
         Cursor.visible = false;
-        inventoryUI_GO.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     private void PlayerInventoryManager_OnItemsChanged(object sender, EventArgs e)
     {
         UpdateUI();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetButtonDown("Inventory"))
-        {
-            if (inventoryUI_GO.activeSelf)
-            {
-                inventoryUI_GO.SetActive(false);
-                GameManager.Instance.UnstackCameraAndHideCursor();
-            }
-            else
-            {
-                inventoryUI_GO.SetActive(true);
-                GameManager.Instance.StackCameraAndShowCursor();
-            }
-
-        }
-    }
-
-
 
     public void SelectInventoryItem(Guid id)
     {
@@ -80,14 +57,17 @@ public class InventoryUI : MonoBehaviour
 
         var inventoryItems = PlayerInventoryData.GetInventoryItems();
 
-        foreach (InventoryItem inventorySlot in inventoryItems)
+        foreach (InventoryItem inventoryItem in inventoryItems)
         {
             GameObject instantiatedInventoryItem = Instantiate(inventorySlotUIPrefab);
 
             instantiatedInventoryItem.transform.SetParent(itemsParent.transform);
 
-            var inventorySlotUI = instantiatedInventoryItem.GetComponent<InventorySlotUI>();
-            inventorySlotUI.SetItem(inventorySlot);
+            if (inventoryItem != null)
+            {
+                var inventorySlotUI = instantiatedInventoryItem.GetComponent<InventorySlotUI>();
+                inventorySlotUI.SetItem(inventoryItem);
+            }
 
             instantiatedItemSlots.Add(instantiatedInventoryItem);
 

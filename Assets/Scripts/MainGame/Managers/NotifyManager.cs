@@ -31,11 +31,11 @@ public class NotifyManager : MonoBehaviour
         else
         {
             attackNotify.SetText(damage.ToString());
-        }
 
-        if(isCritical)
-        {
-            attackNotify.SetCriticalTextColor();
+            if (isCritical)
+            {
+                attackNotify.SetCriticalTextColor();
+            }
         }
     }
 }

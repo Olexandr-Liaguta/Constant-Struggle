@@ -68,11 +68,6 @@ public class EquipmentManager : MonoBehaviour
         OnEquipmentChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    private void Update()
-    {
-        // if (Input.GetKeyDown(KeyCode.U)) UnequipAll();
-    }
-
     EquipmentSlotExact? _HandleEquipmentSlot(EquipmentSlot equipmentSlot)
     {
         switch (equipmentSlot)
@@ -185,15 +180,6 @@ public class EquipmentManager : MonoBehaviour
         {
             targetMesh.SetBlendShapeWeight((int)blendShape, weight);
         }
-    }
-
-    public void UnequipAll()
-    {
-        foreach (var equipment in PlayerInventoryData.GetEquipments())
-        {
-            Unequip(equipment.slot);
-        }
-        _EquipDefaultItems();
     }
 
     void _EquipDefaultItems()

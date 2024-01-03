@@ -15,7 +15,7 @@ public class EnemyStats : CharacterStats
         base.Die();
 
         PickUpManager.Instance.DropPickup(gameObject, score);
-        SceneProgressManager.instance.HandleEnemyDies(gameObject);
+        SceneProgressManager.Instance.HandleEnemyDies(gameObject);
 
         Destroy(gameObject);
     }

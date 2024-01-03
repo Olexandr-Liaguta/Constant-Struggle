@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class PlayerStats : CharacterStats
 {
@@ -22,6 +23,9 @@ public class PlayerStats : CharacterStats
         public float maxMana;
     }
 
+    public event EventHandler OnStatsChange;
+
+
 
     private void Awake()
     {
@@ -36,6 +40,7 @@ public class PlayerStats : CharacterStats
 
         OnHealthChange?.Invoke(this, new OnHealthChangeArgs { health = health.currentValue, maxHealth = GetMaxHealth() });
         OnManaChange?.Invoke(this, new OnManaChangeArgs { mana = mana.currentValue, maxMana = mana.GetMaxValue() });
+        OnStatsChange?.Invoke(this, EventArgs.Empty);
     }
 
     private void EquipmentManager_OnEquipmentChanged(object sender, EventArgs e)
@@ -67,6 +72,8 @@ public class PlayerStats : CharacterStats
         }
 
         UpdatePointStatsModifiersFromOtherStats();
+
+        OnStatsChange?.Invoke(this, EventArgs.Empty);
     }
 
     void UpdateStatFromModifiers(List<ItemManager.AddModifier> modifiers)

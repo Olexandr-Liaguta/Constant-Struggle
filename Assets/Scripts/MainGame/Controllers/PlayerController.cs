@@ -23,9 +23,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+        Vector2 movement = GameInputManager.Instance.GetMovement();
+
+        Vector3 direction = new Vector3(movement.x, 0f, movement.y).normalized;
 
         if(direction.magnitude >= 0.1f)
         {

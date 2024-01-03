@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-      
+
 public class Tooltip : MonoBehaviour
 {
     [SerializeField] GameObject attributePrefab, dividerPrefab, contentGO;
@@ -16,7 +16,7 @@ public class Tooltip : MonoBehaviour
         public string text;
     }
 
-    List<AttributeTexts> attributeTexts = new()
+    readonly private List<AttributeTexts> attributeTexts = new()
     {
         new AttributeTexts()  { attribute = Attribute.AttackSpeed, text = "Attack speed"},
         new AttributeTexts() { attribute = Attribute.Damage, text = "Damage" },
@@ -48,6 +48,8 @@ public class Tooltip : MonoBehaviour
 
     public void Show(InventoryItem inventoryItem)
     {
+        Hide();
+
         itemNameUI.SetInventoryItem(inventoryItem);
 
         bool hasInventoryItemMidifiers = inventoryItem.addModifiers != null && inventoryItem.addModifiers.Count > 0;

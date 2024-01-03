@@ -10,14 +10,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public Guid id = Guid.NewGuid();
 
-    InventoryUI inventoryUI;
-
     InventoryItem inventoryItem;
-
-    private void Awake()
-    {
-        inventoryUI = GetComponentInParent<InventoryUI>();
-    }
 
     public void SetItem(InventoryItem newItem)
     {
@@ -49,7 +42,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void SelectItem()
     {
-        inventoryUI.SelectInventoryItem(id);
+        PlayerInventoryManager.Instance.SelectInventoryItem(id);
     }
 
     public void UseItem()

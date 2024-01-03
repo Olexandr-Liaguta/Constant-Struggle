@@ -61,260 +61,14 @@
     "inventoryItems": [
         {
             "item": {
-                "instanceID": 23678
+                "instanceID": 27328
             },
             "quantity": 0,
-            "id": "b21cd85d-575d-4773-844f-419969b5e5d4",
-            "rarity": 2,
-            "addModifiers": [
-                {
-                    "attribute": 1,
-                    "value": {
-                        "value": 8,
-                        "min": 0,
-                        "max": 0
-                    }
-                },
-                {
-                    "attribute": 9,
-                    "value": {
-                        "value": 8,
-                        "min": 0,
-                        "max": 0
-                    }
-                }
-            ]
-        },
-        {
-            "item": {
-                "instanceID": 23672
-            },
-            "quantity": 0,
-            "id": "f04cd2c7-50bd-4ee0-b0ff-6b892fbaa5d3",
-            "rarity": 2,
-            "addModifiers": [
-                {
-                    "attribute": 4,
-                    "value": {
-                        "value": 100,
-                        "min": 0,
-                        "max": 0
-                    }
-                }
-            ]
-        },
-        {
-            "item": {
-                "instanceID": 23664
-            },
-            "quantity": 0,
-            "id": "d920236d-e3d3-4419-ac2f-8d8b29908e9c",
+            "id": "359127de-869c-4364-9180-498a64b138f5",
             "rarity": 1,
-            "addModifiers": [
-                {
-                    "attribute": 6,
-                    "value": {
-                        "value": 16,
-                        "min": 0,
-                        "max": 0
-                    }
-                }
-            ]
-        },
-        {
-            "item": {
-                "instanceID": 23660
-            },
-            "quantity": 0,
-            "id": "cc8093dc-8744-4fc6-b5a9-5167061d07db",
-            "rarity": 2,
-            "addModifiers": [
-                {
-                    "attribute": 10,
-                    "value": {
-                        "value": 11,
-                        "min": 0,
-                        "max": 0
-                    }
-                },
-                {
-                    "attribute": 8,
-                    "value": {
-                        "value": 11,
-                        "min": 0,
-                        "max": 0
-                    }
-                },
-                {
-                    "attribute": 7,
-                    "value": {
-                        "value": 11,
-                        "min": 0,
-                        "max": 0
-                    }
-                }
-            ]
-        },
-        {
-            "item": {
-                "instanceID": 23680
-            },
-            "quantity": 0,
-            "id": "e6d5471a-a6bd-4d14-98ea-b17fbe1c28ec",
-            "rarity": 0,
-            "addModifiers": []
-        },
-        {
-            "item": {
-                "instanceID": 23658
-            },
-            "quantity": 0,
-            "id": "f398325b-e071-4b7a-b794-30483bd74514",
-            "rarity": 0,
-            "addModifiers": []
-        },
-        {
-            "item": {
-                "instanceID": 23672
-            },
-            "quantity": 0,
-            "id": "8e6e94d4-c8f1-4d7b-9ed0-55ad584efba1",
-            "rarity": 0,
-            "addModifiers": []
-        },
-        {
-            "item": {
-                "instanceID": 23654
-            },
-            "quantity": 0,
-            "id": "552068c8-9c7d-43f9-b856-bbec66208a3a",
-            "rarity": 0,
-            "addModifiers": []
-        },
-        {
-            "item": {
-                "instanceID": 23672
-            },
-            "quantity": 0,
-            "id": "3fabdae2-a05d-4e0b-9d43-014d99faed0f",
-            "rarity": 0,
-            "addModifiers": []
-        },
-        {
-            "item": {
-                "instanceID": 23658
-            },
-            "quantity": 0,
-            "id": "c2579fe8-c7ea-4ba1-a18c-48003d7b3ba8",
-            "rarity": 0,
-            "addModifiers": []
-        },
-        {
-            "item": {
-                "instanceID": 23678
-            },
-            "quantity": 0,
-            "id": "7cf708a1-3814-40a5-bec3-3963ef2515ee",
-            "rarity": 0,
-            "addModifiers": []
-        },
-        {
-            "item": {
-                "instanceID": 23676
-            },
-            "quantity": 0,
-            "id": "1eee65ee-d341-4f12-bc6d-5bfe5af71649",
-            "rarity": 2,
-            "addModifiers": [
-                {
-                    "attribute": 7,
-                    "value": {
-                        "value": 33,
-                        "min": 0,
-                        "max": 0
-                    }
-                }
-            ]
-        },
-        {
-            "item": {
-                "instanceID": 23658
-            },
-            "quantity": 0,
-            "id": "6f8d521d-dc59-4a27-8db4-a29c386c952a",
-            "rarity": 0,
-            "addModifiers": []
-        },
-        {
-            "item": {
-                "instanceID": 23664
-            },
-            "quantity": 0,
-            "id": "42fdf2e1-7010-4f79-b7ae-b635288fc89b",
-            "rarity": 0,
-            "addModifiers": []
-        },
-        {
-            "item": {
-                "instanceID": 23660
-            },
-            "quantity": 0,
-            "id": "4737779c-6e61-4cae-8c83-ce9de4f92441",
-            "rarity": 0,
-            "addModifiers": []
-        },
-        {
-            "item": {
-                "instanceID": 23678
-            },
-            "quantity": 0,
-            "id": "389a3227-c5c5-46df-940c-212da13a9a49",
-            "rarity": 3,
             "addModifiers": [
                 {
                     "attribute": 2,
-                    "value": {
-                        "value": 50,
-                        "min": 0,
-                        "max": 0
-                    }
-                },
-                {
-                    "attribute": 9,
-                    "value": {
-                        "value": 8,
-                        "min": 0,
-                        "max": 0
-                    }
-                },
-                {
-                    "attribute": 7,
-                    "value": {
-                        "value": 16,
-                        "min": 0,
-                        "max": 0
-                    }
-                },
-                {
-                    "attribute": 5,
-                    "value": {
-                        "value": 16,
-                        "min": 0,
-                        "max": 0
-                    }
-                }
-            ]
-        },
-        {
-            "item": {
-                "instanceID": 23660
-            },
-            "quantity": 0,
-            "id": "6c4eddf2-b6e0-4b99-89b3-c5b2ca9313e7",
-            "rarity": 1,
-            "addModifiers": [
-                {
-                    "attribute": 4,
                     "value": {
                         "value": 25,
                         "min": 0,
@@ -322,53 +76,27 @@
                     }
                 },
                 {
-                    "attribute": 1,
-                    "value": {
-                        "value": 4,
-                        "min": 0,
-                        "max": 0
-                    }
-                }
-            ]
-        },
-        {
-            "item": {
-                "instanceID": 23660
-            },
-            "quantity": 0,
-            "id": "ffe9117a-4b7f-47cf-937b-aa2702a55b7c",
-            "rarity": 0,
-            "addModifiers": []
-        },
-        {
-            "item": {
-                "instanceID": 23662
-            },
-            "quantity": 0,
-            "id": "a1e61a1e-b843-4223-a1b0-9d10e655a0d1",
-            "rarity": 0,
-            "addModifiers": []
-        },
-        {
-            "item": {
-                "instanceID": 23656
-            },
-            "quantity": 0,
-            "id": "a5468abf-57a0-44a6-b334-8b1d57697b4b",
-            "rarity": 1,
-            "addModifiers": [
-                {
-                    "attribute": 10,
+                    "attribute": 7,
                     "value": {
                         "value": 8,
                         "min": 0,
                         "max": 0
                     }
-                },
+                }
+            ]
+        },
+        {
+            "item": {
+                "instanceID": 27318
+            },
+            "quantity": 0,
+            "id": "6d41ba04-9646-4cf1-86d3-e263721a6333",
+            "rarity": 1,
+            "addModifiers": [
                 {
-                    "attribute": 1,
+                    "attribute": 8,
                     "value": {
-                        "value": 4,
+                        "value": 16,
                         "min": 0,
                         "max": 0
                     }
@@ -377,30 +105,48 @@
         },
         {
             "item": {
-                "instanceID": 23656
+                "instanceID": 27320
             },
             "quantity": 0,
-            "id": "64bbaa99-0959-4362-a720-646d5749e68c",
+            "id": "2d102c65-d0bb-4edf-a0e2-890a14a55571",
             "rarity": 0,
             "addModifiers": []
+        },
+        {
+            "item": {
+                "instanceID": 27322
+            },
+            "quantity": 0,
+            "id": "0685ce58-b77d-4ae7-8783-166b43a4bf9e",
+            "rarity": 1,
+            "addModifiers": [
+                {
+                    "attribute": 4,
+                    "value": {
+                        "value": 50,
+                        "min": 0,
+                        "max": 0
+                    }
+                }
+            ]
         }
     ],
     "resources": [
         {
             "type": 1,
-            "value": 164
+            "value": 73
         },
         {
             "type": 3,
-            "value": 261
+            "value": 174
         },
         {
             "type": 2,
-            "value": 612
+            "value": 291
         },
         {
             "type": 0,
-            "value": 297
+            "value": 206
         }
     ],
     "equipments": [
@@ -408,48 +154,57 @@
             "slot": 6,
             "inventoryItemDTO": {
                 "item": {
-                    "instanceID": 23654
+                    "instanceID": 27318
                 },
                 "quantity": 0,
-                "id": "e291820c-8add-4afa-afdb-ef1037635365",
-                "rarity": 0,
-                "addModifiers": []
+                "id": "f068b0df-80ef-4e1e-905f-4bf25a5ac19f",
+                "rarity": 2,
+                "addModifiers": [
+                    {
+                        "attribute": 8,
+                        "value": {
+                            "value": 33,
+                            "min": 0,
+                            "max": 0
+                        }
+                    }
+                ]
             }
         },
         {
             "slot": 3,
             "inventoryItemDTO": {
                 "item": {
-                    "instanceID": 23672
+                    "instanceID": 27344
                 },
                 "quantity": 0,
-                "id": "1dd30949-b3c0-431b-af91-e07740f70ac3",
+                "id": "9633f544-dea6-4070-9308-2f60cf1d24dd",
                 "rarity": 0,
                 "addModifiers": []
             }
         },
         {
-            "slot": 4,
+            "slot": 0,
             "inventoryItemDTO": {
                 "item": {
-                    "instanceID": 23680
+                    "instanceID": 27320
                 },
                 "quantity": 0,
-                "id": "8b398d79-6562-4be6-a6fe-79824da3bda6",
+                "id": "67877302-37fb-4a37-b6ec-f359fa629295",
                 "rarity": 2,
                 "addModifiers": [
                     {
-                        "attribute": 4,
+                        "attribute": 0,
                         "value": {
-                            "value": 50,
-                            "min": 0,
-                            "max": 0
+                            "value": 0,
+                            "min": 25,
+                            "max": 25
                         }
                     },
                     {
-                        "attribute": 2,
+                        "attribute": 5,
                         "value": {
-                            "value": 50,
+                            "value": 16,
                             "min": 0,
                             "max": 0
                         }

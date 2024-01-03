@@ -38,8 +38,6 @@ public class SaveManager : MonoBehaviour
     public static SaveManager Instance { get; private set; }
 
 
-
-
     public event EventHandler OnLoadGame;
 
 
@@ -73,7 +71,6 @@ public class SaveManager : MonoBehaviour
 
             if (timer > saveTime)
             {
-                Debug.Log("Save");
                 Save();
                 timer = 0f;
             }
@@ -102,6 +99,8 @@ public class SaveManager : MonoBehaviour
         string jsonString = JsonUtility.ToJson(gameData, true);
 
         File.WriteAllText(SAVE_FOLDER + "/save.txt", jsonString);
+
+        Debug.Log("Save");
     }
 
     public void Load()
